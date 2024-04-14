@@ -1,0 +1,27 @@
+.game-board {
+  background-color: var(--board-color);
+  width: 90vmin;
+  height: 90vmin;
+  display: grid;
+  align-self: center;
+  grid-template-rows: repeat(var(--snake-grid-rows), 1fr);
+  grid-template-columns: repeat(var(--snake-grid-columns), 1fr);
+
+  &.blur {
+    filter: blur(4px);
+  }
+}
+
+.game-over {
+  filter: blur(4px);
+}
+
+.paused-message,
+.game-over-message {
+  position: absolute;
+  top: 30%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  font-size: 5vmin;
+  color: var(--snake-color);
+}

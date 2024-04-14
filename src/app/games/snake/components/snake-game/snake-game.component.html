@@ -1,0 +1,17 @@
+<div class="container">
+
+  <div class="menu">
+    <p class="score-message">Your score: {{ score }}</p>
+    @if (gameOver) {
+      <button class="restart-button" (click)="restart()">Restart Game</button>
+    } @else {
+      <h4 class="hint-message">HINT: Press Esc to Pause</h4>
+    }
+  </div>
+
+  <app-board
+    (gameOverEmitter)="onGameOver($event)"
+    (score)="onScore($event)"
+    [isPaused]="isPaused"
+  ></app-board>
+</div>

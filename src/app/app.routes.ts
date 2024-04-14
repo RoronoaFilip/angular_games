@@ -1,3 +1,15 @@
 import { Routes } from '@angular/router';
+import {BoardComponent} from "./games/snake/components/board/board.component";
+import { SnakeGameComponent } from "./games/snake/components/snake-game/snake-game.component";
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: '/snake',
+    pathMatch: 'full'
+  },
+  {
+    path: 'snake',
+    component: SnakeGameComponent
+  }
+];
