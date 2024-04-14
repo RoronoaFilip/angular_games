@@ -5,7 +5,12 @@
     @if (gameOver) {
       <button class="restart-button" (click)="restart()">Restart Game</button>
     } @else {
-      <h4 class="hint-message">HINT: Press Esc to Pause</h4>
+      <p class="hint-message">HINT: Press Esc to Pause</p>
+      @if (isPaused) {
+        <button class="pause-button" (click)="pause()">Resume Game</button>
+      } @else {
+        <button class="pause-button" (click)="pause()">Pause Game</button>
+      }
     }
   </div>
 
@@ -14,4 +19,13 @@
     (score)="onScore($event)"
     [isPaused]="isPaused"
   ></app-board>
+
+  <div class="mobile-controls">
+    <nav class="o-pad">
+      <a class="up" (click)="dispatchKeyEvent('ArrowUp')"></a>
+      <a class="right" (click)="dispatchKeyEvent('ArrowRight')"></a>
+      <a class="down" (click)="dispatchKeyEvent('ArrowDown')"></a>
+      <a class="left" (click)="dispatchKeyEvent('ArrowLeft')"></a>
+    </nav>
+  </div>
 </div>

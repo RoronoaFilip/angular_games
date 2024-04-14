@@ -41,4 +41,8 @@ export class SnakeGameComponent implements OnInit {
   restart(): void {
     location.reload();
   }
+
+  dispatchKeyEvent(key: string): void {
+    this.directionService.next(new KeyboardEvent('keydown', { key }));
+  }
 }

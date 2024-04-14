@@ -1,5 +1,6 @@
 import { Position } from "./position";
 import { BehaviorSubject } from "rxjs";
+import { Direction } from "./direction";
 
 export const SNAKE_SPEED = 7;
 
@@ -8,7 +9,7 @@ export class Snake {
   head = this.snakeBody[0];
   head$$ = new BehaviorSubject(this.head);
 
-  currentDirection: Position = { x: 0, y: 0 };
+  currentDirection: Direction = { x: 0, y: 0 };
 
   draw(gameBoard: HTMLDivElement): void {
     this.move();

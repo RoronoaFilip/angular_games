@@ -1,14 +1,16 @@
-<div [ngClass]="{
+<div>
+  <div [ngClass]="{
 'game-board': true,
 'game-over': gameOver || isPaused,
 }">
 
+  </div>
+
+  @if (isPaused) {
+    <p class="paused-message">PAUSED</p>
+  }
+
+  @if (gameOver) {
+    <p class="game-over-message">GAME OVER</p>
+  }
 </div>
-
-@if(isPaused) {
-  <p class="paused-message">PAUSED</p>
-}
-
-@if(gameOver) {
-  <p class="game-over-message">GAME OVER</p>
-}

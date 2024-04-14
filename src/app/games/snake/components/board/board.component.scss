@@ -2,6 +2,9 @@
   background-color: var(--board-color);
   width: 90vmin;
   height: 90vmin;
+
+  min-width: 70vmin;
+  min-height: 70vmin;
   display: grid;
   align-self: center;
   grid-template-rows: repeat(var(--snake-grid-rows), 1fr);
@@ -18,10 +21,24 @@
 
 .paused-message,
 .game-over-message {
-  position: absolute;
+  position: fixed;
   top: 30%;
-  left: 60%;
+  left: 70%;
   transform: translate(-50%, -50%);
-  font-size: 5vmin;
-  color: var(--snake-color);
+  font-size: 8vmin;
+  color: red;
+}
+
+
+@media (max-width: 1912px) {
+  .game-board {
+    max-width: 80vmin;
+    max-height: 80vmin;
+  }
+
+  .paused-message,
+  .game-over-message {
+    top: 50%;
+    left: 50%;
+  }
 }
