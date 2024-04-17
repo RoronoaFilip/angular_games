@@ -7,17 +7,17 @@ export class BoardGridUtils {
   }
 
   static getRandomPosition(): Position {
-    const width = 21;
-    const height = 21;
+    const width = 25;
+    const height = 25;
 
     return {
-      x: Math.floor(Math.random() * width) + 1,
-      y: Math.floor(Math.random() * height) + 1,
+      x: Math.floor(Math.random() * width),
+      y: Math.floor(Math.random() * height),
     };
   }
 
   static isPositionOutOfBounds(position: Position): boolean {
-    return position.x < 1 || position.x > 21 || position.y < 1 || position.y > 21;
+    return position.x < 1 || position.x >= 26 || position.y < 1 || position.y >= 26;
   }
 
   static isSnakeCollision(position: Position, snakeBody: Position[]): boolean {

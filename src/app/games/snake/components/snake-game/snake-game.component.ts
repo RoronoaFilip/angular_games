@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { BoardComponent } from "../board/board.component";
 import { NgClass } from "@angular/common";
 import { DirectionService } from '../../services/direction.service';
+import { SettingsService } from "../../services/settings.service";
 
 @Component({
   selector: 'app-snake-game',
@@ -19,7 +20,11 @@ export class SnakeGameComponent implements OnInit {
   directionService = inject(DirectionService);
 
   ngOnInit() {
-    this.directionService.lastKey$$.subscribe((key: string | null) => {
+    this.subscribeForKeyPress();
+  }
+
+  private subscribeForKeyPress() {
+    this.directionService.keyPress$$.subscribe((key: string | null) => {
       if (key === 'Escape' && !this.gameOver) {
         this.pause();
       }

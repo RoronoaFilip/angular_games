@@ -1,20 +1,3 @@
-.game-board {
-  background-color: var(--board-color);
-  width: 90vmin;
-  height: 90vmin;
-
-  min-width: 70vmin;
-  min-height: 70vmin;
-  display: grid;
-  align-self: center;
-  grid-template-rows: repeat(var(--snake-grid-rows), 1fr);
-  grid-template-columns: repeat(var(--snake-grid-columns), 1fr);
-
-  &.blur {
-    filter: blur(4px);
-  }
-}
-
 .game-over {
   filter: blur(4px);
 }
@@ -29,13 +12,27 @@
   color: red;
 }
 
+.row {
+  display: flex;
+}
 
-@media (max-width: 1912px) {
-  .game-board {
-    max-width: 80vmin;
-    max-height: 80vmin;
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #000;
+  background-color: #f0f0f0;
+
+  &.snake {
+    background-color: #369e06;
   }
 
+  &.food {
+    background-color: #f00;
+  }
+}
+
+
+@media (max-width: 1912px) {
   .paused-message,
   .game-over-message {
     top: 50%;

@@ -8,12 +8,12 @@ import { BehaviorSubject } from "rxjs";
 export class DirectionService {
 
   currentDirection$$ = new BehaviorSubject<Direction | null>(null);
-  lastKey$$ = new BehaviorSubject<string | null>(null);
+  keyPress$$ = new BehaviorSubject<string | null>(null);
 
   next(event: KeyboardEvent): void {
     event.preventDefault();
 
-    this.lastKey$$.next(event.key);
+    this.keyPress$$.next(event.key);
 
     switch (event.key) {
       case 'ArrowUp':

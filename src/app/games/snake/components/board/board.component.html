@@ -1,16 +1,20 @@
-<div>
-  <div [ngClass]="{
-'game-board': true,
-'game-over': gameOver || isPaused,
-}">
-
+@for (col of array(1, BOARD_COLUMNS); track col) {
+  <div class="row">
+    @for (row of array(1, BOARD_ROWS); track row) {
+      <div [ngClass]="{
+      'cell': true,
+      'snake': isSnake({x: row, y: col}),
+      'food': isFood({x: row, y: col}),
+      'game-over': gameOver,
+      }"></div>
+    }
   </div>
+}
 
-  @if (isPaused) {
-    <p class="paused-message">PAUSED</p>
-  }
+@if (isPaused) {
+  <p class="paused-message">PAUSED</p>
+}
 
-  @if (gameOver) {
-    <p class="game-over-message">GAME OVER</p>
-  }
-</div>
+@if (gameOver) {
+  <p class="game-over-message">GAME OVER</p>
+}
