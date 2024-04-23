@@ -1,6 +1,10 @@
 # Games
+This project represents a collection of small games utilizing rxjs and Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.1.
+Currently, the following games are available:
+- [ ] Tic Tac Toe
+- [x] Snake
+- [ ] Tetris
 
 ## Development server
 
