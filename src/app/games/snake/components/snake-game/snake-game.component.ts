@@ -1,13 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { BoardComponent } from "../board/board.component";
+import { SnakeBoardComponent } from "../board/snake-board.component";
 import { NgClass } from "@angular/common";
-import { DirectionService } from '../../services/direction.service';
-import { SettingsService } from "../../services/settings.service";
+import { KeyClickService } from '../../../shared/services/key-click.service';
 
 @Component({
   selector: 'app-snake-game',
   standalone: true,
-  imports: [ BoardComponent, NgClass ],
+  imports: [ SnakeBoardComponent, NgClass ],
   templateUrl: './snake-game.component.html',
   styleUrl: './snake-game.component.scss'
 })
@@ -17,7 +16,7 @@ export class SnakeGameComponent implements OnInit {
   isPaused = false;
   score = 0;
 
-  directionService = inject(DirectionService);
+  directionService = inject(KeyClickService);
 
   ngOnInit() {
     this.subscribeForKeyPress();

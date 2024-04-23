@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { Snake } from "../../models/snake";
 import { Food } from "../../models/food";
-import { DirectionService } from "../../services/direction.service";
+import { KeyClickService } from "../../../shared/services/key-click.service";
 import { BoardGridUtils } from "../../utils/BoardGridUtils";
 import { Direction } from "../../models/direction";
 import { NgClass, NgForOf } from "@angular/common";
@@ -22,16 +22,16 @@ import { SettingsService } from "../../services/settings.service";
 import { BoardSize } from "../../models/BoardSize";
 
 @Component({
-  selector: 'app-board',
+  selector: 'app-snake-board',
   standalone: true,
   imports: [
     NgClass,
     NgForOf
   ],
-  templateUrl: './board.component.html',
-  styleUrl: './board.component.scss'
+  templateUrl: './snake-board.component.html',
+  styleUrl: './snake-board.component.scss'
 })
-export class BoardComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class SnakeBoardComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   BOARD_ROWS = 26;
   BOARD_COLUMNS = 26;
 
@@ -46,7 +46,7 @@ export class BoardComponent implements OnInit, AfterViewInit, OnChanges, OnDestr
 
   snakeSpeed = 5;
 
-  directionService = inject(DirectionService);
+  keyClickService = inject(KeyClickService);
   settingsService = inject(SettingsService);
 
   ticker$: Observable<number> | null = null;
@@ -122,7 +122,7 @@ export class BoardComponent implements OnInit, AfterViewInit, OnChanges, OnDestr
   }
 
   private subscribeForDirectionChange(): void {
-    this.directionService.currentDirection$$.subscribe((direction: Direction | null) => {
+    this.keyClickService.currentDirection$$.subscribe((direction: Direction | null) => {
       if (!direction) return;
 
       if (BoardGridUtils.isDirectionOpposite(direction, this.snake.currentDirection)) {

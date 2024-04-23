@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Direction, DIRECTIONS } from "../models/direction";
+import { Direction, DIRECTIONS } from "../../snake/models/direction";
 import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
-export class DirectionService {
+export class KeyClickService {
 
   currentDirection$$ = new BehaviorSubject<Direction | null>(null);
   keyPress$$ = new BehaviorSubject<string | null>(null);

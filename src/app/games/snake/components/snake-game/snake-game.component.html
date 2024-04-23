@@ -14,11 +14,11 @@
     }
   </div>
 
-  <app-board
+  <app-snake-board
     (gameOverEmitter)="onGameOver($event)"
     (score)="onScore($event)"
     [isPaused]="isPaused"
-  ></app-board>
+  ></app-snake-board>
 
   <div class="mobile-controls">
     <nav class="o-pad">
