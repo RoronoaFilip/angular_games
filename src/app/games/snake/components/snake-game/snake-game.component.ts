@@ -1,52 +1,49 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { SnakeBoardComponent } from '../board/snake-board.component';
-import { NgClass } from '@angular/common';
-import { KeyClickService } from '../../../shared/services/key-click.service';
+import { AsyncPipe, NgClass } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { selectIsGameOver, selectIsPaused } from '../../state/selectors';
+import { Observable } from 'rxjs';
+import { changeDirection, pause } from '../../state/actions';
+import { DIRECTIONS } from '../../models/direction';
 
 @Component({
   selector: 'app-snake-game',
   standalone: true,
-  imports: [ SnakeBoardComponent, NgClass ],
+  imports: [ SnakeBoardComponent, NgClass, AsyncPipe ],
   templateUrl: './snake-game.component.html',
   styleUrl: './snake-game.component.scss',
 })
 export class SnakeGameComponent implements OnInit {
+  store = inject(Store);
 
-  gameOver = false;
-  isPaused = false;
   score = 0;
 
-  directionService = inject(KeyClickService);
+  isPaused$!: Observable<boolean>;
+  isGameOver$!: Observable<boolean>;
 
   ngOnInit() {
-    this.subscribeForKeyPress();
-  }
-
-  private subscribeForKeyPress() {
-    this.directionService.keyPress$$.subscribe((key: string | null) => {
-      if (key === 'Escape' && !this.gameOver) {
-        this.pause();
-      }
-    });
-  }
-
-  onGameOver(event: boolean): void {
-    this.gameOver = event;
+    this.isPaused$ = this.store.select(selectIsPaused);
+    this.isGameOver$ = this.store.select(selectIsGameOver);
   }
 
   onScore(event: number): void {
     this.score += event;
   }
 
-  pause(): void {
-    this.isPaused = !this.isPaused;
-  }
-
   restart(): void {
     location.reload();
   }
 
-  dispatchKeyEvent(key: string): void {
-    this.directionService.next(new KeyboardEvent('keydown', { key }));
+  pause(): void {
+    this.store.dispatch(pause());
+  }
+
+  dispatchKeyEvent(direction: string): void {
+    const dispatchDirection = {
+      direction: DIRECTIONS[(direction).toUpperCase()] || null,
+    }
+
+    this.store.dispatch(changeDirection(dispatchDirection));
   }
 }

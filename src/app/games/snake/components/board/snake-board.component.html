@@ -5,16 +5,16 @@
       'cell': true,
       'snake': isSnake({x: row, y: col}),
       'food': isFood({x: row, y: col}),
-      'game-over': gameOver,
+      'game-over': isGameOver$ | async,
       }"></div>
     }
   </div>
 }
 
-@if (isPaused) {
+@if (isPaused$ | async) {
   <p class="paused-message">PAUSED</p>
 }
 
-@if (gameOver) {
+@if (isGameOver$ | async) {
   <p class="game-over-message">GAME OVER</p>
 }

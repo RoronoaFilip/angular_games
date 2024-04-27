@@ -1,32 +1,34 @@
-import { Injectable } from '@angular/core';
-import { Direction, DIRECTIONS } from '../../snake/models/direction';
-import { BehaviorSubject } from 'rxjs';
+import { inject, Injectable } from '@angular/core';
+import { DIRECTIONS } from '../../snake/models/direction';
+import { Store } from '@ngrx/store';
+import { changeDirection, pause } from '../../snake/state/actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class KeyClickService {
 
-  currentDirection$$ = new BehaviorSubject<Direction | null>(null);
-  keyPress$$ = new BehaviorSubject<string | null>(null);
+  store = inject(Store);
 
   next(event: KeyboardEvent): void {
     event.preventDefault();
 
-    this.keyPress$$.next(event.key);
 
     switch (event.key) {
       case 'ArrowUp':
-        this.currentDirection$$.next(DIRECTIONS.UP);
+        this.store.dispatch(changeDirection({ direction: DIRECTIONS['UP'] }));
         break;
       case 'ArrowDown':
-        this.currentDirection$$.next(DIRECTIONS.DOWN);
+        this.store.dispatch(changeDirection({ direction: DIRECTIONS['DOWN'] }));
         break;
       case 'ArrowLeft':
-        this.currentDirection$$.next(DIRECTIONS.LEFT);
+        this.store.dispatch(changeDirection({ direction: DIRECTIONS['LEFT'] }));
         break;
       case 'ArrowRight':
-        this.currentDirection$$.next(DIRECTIONS.RIGHT);
+        this.store.dispatch(changeDirection({ direction: DIRECTIONS['RIGHT'] }));
+        break;
+      case 'Escape':
+        this.store.dispatch(pause());
         break;
     }
   }

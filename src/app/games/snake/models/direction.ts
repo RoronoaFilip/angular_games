@@ -3,7 +3,7 @@ export type Direction = {
   y: number;
 };
 
-export const DIRECTIONS = {
+export const DIRECTIONS: { [key: string]: Direction } = {
   UP: { x: 0, y: -1 },
   DOWN: { x: 0, y: 1 },
   LEFT: { x: -1, y: 0 },

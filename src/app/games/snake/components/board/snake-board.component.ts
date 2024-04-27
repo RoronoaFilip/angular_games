@@ -1,25 +1,21 @@
-import {
-  AfterViewInit,
-  Component,
-  EventEmitter,
-  inject,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { Snake } from '../../models/snake';
 import { Food } from '../../models/food';
-import { KeyClickService } from '../../../shared/services/key-click.service';
 import { BoardGridUtils } from '../../utils/BoardGridUtils';
-import { Direction } from '../../models/direction';
-import { NgClass, NgForOf } from '@angular/common';
+import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
 import { Position } from '../../models/position';
-import { interval, Observable, Subscription, takeUntil } from 'rxjs';
-import { SettingsService } from '../../services/settings.service';
+import { combineLatest, interval, map, Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { gameOver, increaseSnakeSpeed } from '../../state/actions';
+import {
+  selectBoardSize,
+  selectDirection,
+  selectIsGameOver,
+  selectIsPaused,
+  selectSnakeSpeed,
+} from '../../state/selectors';
 import { BoardSize } from '../../models/BoardSize';
+import { Direction } from '../../models/direction';
 
 @Component({
   selector: 'app-snake-board',
@@ -27,141 +23,130 @@ import { BoardSize } from '../../models/BoardSize';
   imports: [
     NgClass,
     NgForOf,
+    AsyncPipe,
   ],
   templateUrl: './snake-board.component.html',
   styleUrl: './snake-board.component.scss',
 })
-export class SnakeBoardComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class SnakeBoardComponent implements OnInit, OnDestroy {
+  store = inject(Store);
+  boardGameUtils = inject(BoardGridUtils);
+
+  isPaused$!: Observable<boolean>;
+  isGameOver$!: Observable<boolean>;
+  snakeSpeed$!: Observable<number>;
+  snakeSpeed = 1;
+
   BOARD_ROWS = 26;
   BOARD_COLUMNS = 26;
 
-  @Input() isPaused = false;
-  @Output() gameOverEmitter = new EventEmitter<boolean>();
   @Output() score = new EventEmitter<number>();
 
-  gameOver = false;
-
-  snake: Snake = new Snake({ x: this.BOARD_ROWS / 2, y: this.BOARD_COLUMNS / 2 });
-  food: Food = new Food(BoardGridUtils.getRandomPosition());
-
-  snakeSpeed = 5;
-
-  keyClickService = inject(KeyClickService);
-  settingsService = inject(SettingsService);
+  snake!: Snake;
+  food!: Food;
 
   ticker$: Observable<number> | null = null;
-  stopTicker$ = new EventEmitter<void>();
   private subscription: Subscription | null = null;
 
   ngOnInit(): void {
-    // TODO: Think of a way with settings
-    // TODO: Calculate positions correctly
-    this.subscribeForSettingsChange(); // must be first
-    this.subscribeForDirectionChange();
+    this.subscribeToStore(); // must be first
     this.subscribeForSnakeMove();
-  }
-
-  ngAfterViewInit(): void {
-    this.start();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['isPaused']?.currentValue) {
-      this.stop();
-    } else {
-      this.start();
-    }
   }
 
   ngOnDestroy(): void {
     this.stop();
+
+    this.store.dispatch(gameOver());
   }
 
   isFood(position: Position): boolean {
-    return BoardGridUtils.equal(position, this.food.position);
+    return this.boardGameUtils.equal(position, this.food.position);
   }
 
   array(start: number, end: number): number[] {
-    return Array.from({ length: end - start }, (_, i) => start + i);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }
 
   isSnake(position: Position): boolean {
-    return BoardGridUtils.isSnakeCollision(position, this.snake.snakeBody);
+    return this.boardGameUtils.isSnakeCollision(position, this.snake.snakeBody);
   }
 
-  private start(): void {
-    if (this.isPaused) return;
+  private initInterval(): Subscription {
     this.subscription?.unsubscribe();
 
-    this.ticker$ = interval(1000 / this.snakeSpeed)
-      .pipe(
-        takeUntil(this.stopTicker$)
-      );
+    this.ticker$ = interval(1000 / this.snakeSpeed).pipe(
+      map(() => 1000 / this.snakeSpeed)
+    );
 
-    this.subscription = this.ticker$.subscribe(() => {
+    return this.ticker$.subscribe(() => {
+      console.log('move');
       this.snake.move();
     });
   }
 
+  private start(): void {
+    this.subscription?.unsubscribe();
+    this.subscription = this.initInterval();
+  }
+
   private stop(): void {
     this.subscription?.unsubscribe();
-    this.stopTicker$.emit();
   }
 
   private emitGameOver(): void {
     this.stop();
-    this.gameOver = true;
-    this.gameOverEmitter.emit(true);
+    this.store.dispatch(gameOver());
   }
 
   private eatFood(): void {
     this.snake.grow();
-    this.snakeSpeed += 0.1;
-    this.food.position = BoardGridUtils.getRandomPosition();
+    this.store.dispatch(increaseSnakeSpeed());
+    this.food.position = this.boardGameUtils.getRandomPosition();
     this.score.emit(1);
-  }
-
-  private subscribeForDirectionChange(): void {
-    this.keyClickService.currentDirection$$.subscribe((direction: Direction | null) => {
-      if (!direction) return;
-
-      if (BoardGridUtils.isDirectionOpposite(direction, this.snake.currentDirection)) {
-        this.emitGameOver();
-        return;
-      }
-
-      this.snake.currentDirection = direction;
-    });
   }
 
   private subscribeForSnakeMove(): void {
     this.snake.head$$.subscribe(head => {
       if (!head) return;
 
-      if (BoardGridUtils.isPositionOutOfBounds(head) || BoardGridUtils.isSnakeCollision(head, this.snake.snakeBody)) {
+      if (this.boardGameUtils.isPositionOutOfBounds(head)
+        || this.boardGameUtils.isSnakeCollision(head, this.snake.snakeBody)) {
         this.emitGameOver();
         return;
       }
 
-      if (BoardGridUtils.equal(head, this.food.position)) {
-        this.stop();
+      if (this.boardGameUtils.equal(head, this.food.position)) {
         this.eatFood();
-        this.snakeSpeed += 0.1;
-        this.start();
       }
     });
   }
 
-  private subscribeForSettingsChange(): void {
-    this.settingsService.boardSize$$.subscribe((boardSize: BoardSize) => {
+  private subscribeToStore(): void {
+    this.store.select(selectBoardSize).subscribe((boardSize: BoardSize) => {
       this.BOARD_ROWS = boardSize.rows;
       this.BOARD_COLUMNS = boardSize.columns;
 
       this.snake = new Snake({ x: this.BOARD_ROWS / 2, y: this.BOARD_COLUMNS / 2 });
-      this.food = new Food(BoardGridUtils.getRandomPosition());
+      this.food = new Food(this.boardGameUtils.getRandomPosition());
     });
-    this.settingsService.snakeSpeed$$.subscribe((speed: number) => {
+
+    this.store.select(selectDirection).subscribe((direction: Direction | null) => {
+      direction = direction || this.snake.currentDirection;
+      this.snake.currentDirection = direction;
+    });
+
+    this.isPaused$ = this.store.select(selectIsPaused);
+    this.isGameOver$ = this.store.select(selectIsGameOver);
+    this.snakeSpeed$ = this.store.select(selectSnakeSpeed);
+
+    combineLatest([ this.snakeSpeed$, this.isPaused$ ]).subscribe(([ speed, isPaused ]) => {
       this.snakeSpeed = speed;
+
+      if (isPaused) {
+        this.stop();
+      } else {
+        this.start();
+      }
     });
   }
 }

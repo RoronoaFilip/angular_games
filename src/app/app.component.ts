@@ -23,6 +23,6 @@ export class AppComponent {
       this.keyClickService.next(e);
     });
 
-    this.currentPieceService.currentPiece$$.next(PIECES.Z.UP)
+    this.currentPieceService.currentPiece$$.next(PIECES.Z.UP);
   }
 }
