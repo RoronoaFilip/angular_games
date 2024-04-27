@@ -1,6 +1,6 @@
-import { Position } from "./position";
-import { BehaviorSubject } from "rxjs";
-import { Direction } from "./direction";
+import { Position } from './position';
+import { BehaviorSubject } from 'rxjs';
+import { Direction } from './direction';
 
 export class Snake {
   snakeBody: Position[] = [];

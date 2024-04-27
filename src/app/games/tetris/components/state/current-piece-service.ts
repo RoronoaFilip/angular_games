@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import { Piece } from "../../models/pieces/piece";
-import { BehaviorSubject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { Piece } from '../../models/pieces/piece';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CurrentPieceService {
   currentPiece$$ = new BehaviorSubject<Piece | null>(null);

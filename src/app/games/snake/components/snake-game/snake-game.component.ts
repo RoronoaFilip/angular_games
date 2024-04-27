@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { SnakeBoardComponent } from "../board/snake-board.component";
-import { NgClass } from "@angular/common";
+import { SnakeBoardComponent } from '../board/snake-board.component';
+import { NgClass } from '@angular/common';
 import { KeyClickService } from '../../../shared/services/key-click.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { KeyClickService } from '../../../shared/services/key-click.service';
   standalone: true,
   imports: [ SnakeBoardComponent, NgClass ],
   templateUrl: './snake-game.component.html',
-  styleUrl: './snake-game.component.scss'
+  styleUrl: './snake-game.component.scss',
 })
 export class SnakeGameComponent implements OnInit {
 

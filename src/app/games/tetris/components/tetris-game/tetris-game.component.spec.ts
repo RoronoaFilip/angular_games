@@ -8,7 +8,7 @@ describe('TetrisGameComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TetrisGameComponent]
+      imports: [TetrisGameComponent],
     })
     .compileComponents();
     

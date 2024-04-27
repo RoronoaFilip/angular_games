@@ -1,5 +1,5 @@
-import { Position } from "../models/position";
-import { Direction } from "../models/direction";
+import { Position } from '../models/position';
+import { Direction } from '../models/direction';
 
 export class BoardGridUtils {
   static equal(position1: Position, position2: Position): boolean {

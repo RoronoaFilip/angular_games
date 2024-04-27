@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
-import { BoardSize } from "../models/BoardSize";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { BoardSize } from '../models/BoardSize';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SettingsService {
   snakeSpeed$$ = new BehaviorSubject(5);

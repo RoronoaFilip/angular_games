@@ -8,28 +8,28 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
-import { Snake } from "../../models/snake";
-import { Food } from "../../models/food";
-import { KeyClickService } from "../../../shared/services/key-click.service";
-import { BoardGridUtils } from "../../utils/BoardGridUtils";
-import { Direction } from "../../models/direction";
-import { NgClass, NgForOf } from "@angular/common";
-import { Position } from "../../models/position";
-import { interval, Observable, Subscription, takeUntil } from "rxjs";
-import { SettingsService } from "../../services/settings.service";
-import { BoardSize } from "../../models/BoardSize";
+import { Snake } from '../../models/snake';
+import { Food } from '../../models/food';
+import { KeyClickService } from '../../../shared/services/key-click.service';
+import { BoardGridUtils } from '../../utils/BoardGridUtils';
+import { Direction } from '../../models/direction';
+import { NgClass, NgForOf } from '@angular/common';
+import { Position } from '../../models/position';
+import { interval, Observable, Subscription, takeUntil } from 'rxjs';
+import { SettingsService } from '../../services/settings.service';
+import { BoardSize } from '../../models/BoardSize';
 
 @Component({
   selector: 'app-snake-board',
   standalone: true,
   imports: [
     NgClass,
-    NgForOf
+    NgForOf,
   ],
   templateUrl: './snake-board.component.html',
-  styleUrl: './snake-board.component.scss'
+  styleUrl: './snake-board.component.scss',
 })
 export class SnakeBoardComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   BOARD_ROWS = 26;
@@ -95,7 +95,7 @@ export class SnakeBoardComponent implements OnInit, AfterViewInit, OnChanges, On
 
     this.ticker$ = interval(1000 / this.snakeSpeed)
       .pipe(
-        takeUntil(this.stopTicker$),
+        takeUntil(this.stopTicker$)
       );
 
     this.subscription = this.ticker$.subscribe(() => {
