@@ -1,11 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { SnakeBoardComponent } from '../board/snake-board.component';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { selectIsGameOver, selectIsPaused } from '../../state/selectors';
 import { Observable } from 'rxjs';
-import { changeDirection, pause } from '../../state/actions';
+import { changeDirection } from '../../state/actions';
 import { DIRECTIONS } from '../../models/direction';
+import { NavigationService } from '../../services/navigation.service';
+import { selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
+import { pause } from '../../../shared/state/shared-actions';
 
 @Component({
   selector: 'app-snake-game',
@@ -14,7 +16,8 @@ import { DIRECTIONS } from '../../models/direction';
   templateUrl: './snake-game.component.html',
   styleUrl: './snake-game.component.scss',
 })
-export class SnakeGameComponent implements OnInit {
+export class SnakeGameComponent implements OnInit, OnDestroy {
+  navigationService = inject(NavigationService);
   store = inject(Store);
 
   score = 0;
@@ -22,9 +25,15 @@ export class SnakeGameComponent implements OnInit {
   isPaused$!: Observable<boolean>;
   isGameOver$!: Observable<boolean>;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.isPaused$ = this.store.select(selectIsPaused);
     this.isGameOver$ = this.store.select(selectIsGameOver);
+    this.navigationService.subscribeToKeyClicks();
+  }
+
+  ngOnDestroy(): void {
+    console.log('destroy snake game')
+    this.navigationService.keyClickSubscription?.unsubscribe();
   }
 
   onScore(event: number): void {

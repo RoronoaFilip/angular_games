@@ -1,10 +1,12 @@
-@for (row of array(1, BOARD_ROWS); track row) {
-  <div class="row">
-    @for (col of array(1, BOARD_COLUMNS); track col) {
-      <div [ngClass]="{
+<div>
+  @for (row of array(1, BOARD_ROWS); track row) {
+    <div class="row">
+      @for (col of array(1, BOARD_COLUMNS); track col) {
+        <div [ngClass]="{
         'cell': true,
-        'color': isPartOfCurrentPiece(row, col),
+        'color': this.piecesService.isPartOfAnyPiece({x: col, y: row}),
       }"></div>
-    }
-  </div>
-}
+      }
+    </div>
+  }
+</div>

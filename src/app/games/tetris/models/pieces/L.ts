@@ -1,54 +1,74 @@
-import { Position } from '../position';
+import { Piece, PieceByDirection } from './piece';
 
-export type L = Position[];
+export type L = Piece;
 
 /**
  *     *
  *     *
  *   * *
  */
-export const UP_L: L = [
-  { x: 6, y: 1 },
-  { x: 6, y: 2 },
-  { x: 6, y: 3 },
-  { x: 5, y: 3 },
-];
+const UP_L: L = {
+  coordinates: [
+    { x: 6, y: 1 },
+    { x: 6, y: 2 },
+    { x: 6, y: 3 },
+    { x: 5, y: 3 },
+  ],
+  color: 'orange',
+  name: 'L',
+  nextRotation: 'RIGHT',
+}
 
 /**
  *   *
  *   * * *
  */
-export const RIGHT_L: L = [
-  { x: 5, y: 2 },
-  { x: 6, y: 2 },
-  { x: 7, y: 2 },
-  { x: 5, y: 1 },
-];
+const RIGHT_L: L = {
+  coordinates: [
+    { x: 5, y: 2 },
+    { x: 6, y: 2 },
+    { x: 7, y: 2 },
+    { x: 5, y: 1 },
+  ],
+  color: 'orange',
+  name: 'L',
+  nextRotation: 'DOWN',
+}
 
 /**
  *   * *
  *   *
  *   *
  */
-export const DOWN_L: L = [
-  { x: 5, y: 1 },
-  { x: 5, y: 2 },
-  { x: 5, y: 3 },
-  { x: 6, y: 1 },
-];
+const DOWN_L: L = {
+  coordinates: [
+    { x: 5, y: 1 },
+    { x: 5, y: 2 },
+    { x: 5, y: 3 },
+    { x: 6, y: 1 },
+  ],
+  color: 'orange',
+  name: 'L',
+  nextRotation: 'LEFT',
+}
 
 /**
  *   * * *
  *       *
  */
-export const LEFT_L: L = [
-  { x: 5, y: 1 },
-  { x: 6, y: 1 },
-  { x: 7, y: 1 },
-  { x: 7, y: 2 },
-];
+const LEFT_L: L = {
+  coordinates: [
+    { x: 5, y: 1 },
+    { x: 6, y: 1 },
+    { x: 7, y: 1 },
+    { x: 7, y: 2 },
+  ],
+  color: 'orange',
+  name: 'L',
+  nextRotation: 'UP',
+};
 
-export const L_PIECES = {
+export const L_PIECES: PieceByDirection = {
   UP: UP_L,
   RIGHT: RIGHT_L,
   DOWN: DOWN_L,

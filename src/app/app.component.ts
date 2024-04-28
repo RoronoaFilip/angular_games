@@ -1,8 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { KeyClickService } from './games/shared/services/key-click.service';
-import { CurrentPieceService } from './games/tetris/components/state/current-piece-service';
-import { PIECES } from './games/tetris/models/pieces/piece';
 
 @Component({
   selector: 'app-root',
@@ -13,16 +10,4 @@ import { PIECES } from './games/tetris/models/pieces/piece';
 })
 export class AppComponent {
   title = 'games';
-
-  keyClickService = inject(KeyClickService);
-
-  currentPieceService = inject(CurrentPieceService);
-
-  constructor() {
-    window.addEventListener('keydown', (e: KeyboardEvent) => {
-      this.keyClickService.next(e);
-    });
-
-    this.currentPieceService.currentPiece$$.next(PIECES.Z.UP);
-  }
 }

@@ -3,19 +3,15 @@ import { Snake } from '../../models/snake';
 import { Food } from '../../models/food';
 import { BoardGridUtils } from '../../utils/BoardGridUtils';
 import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
-import { Position } from '../../models/position';
-import { combineLatest, interval, map, Observable, Subscription } from 'rxjs';
+import { Position } from '../../../shared/models/position';
+import { combineLatest, interval, Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { gameOver, increaseSnakeSpeed } from '../../state/actions';
-import {
-  selectBoardSize,
-  selectDirection,
-  selectIsGameOver,
-  selectIsPaused,
-  selectSnakeSpeed,
-} from '../../state/selectors';
-import { BoardSize } from '../../models/BoardSize';
+import { increaseSnakeSpeed } from '../../state/actions';
+import { selectDirection, selectSnakeSpeed } from '../../state/selectors';
+import { BoardSize } from '../../../shared/models/BoardSize';
 import { Direction } from '../../models/direction';
+import { selectBoardSize, selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
+import { gameOver } from '../../../shared/state/shared-actions';
 
 @Component({
   selector: 'app-snake-board',
@@ -46,17 +42,21 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
   food!: Food;
 
   ticker$: Observable<number> | null = null;
-  private subscription: Subscription | null = null;
+  private intervalSubscription: Subscription | null = null;
+  private subscriptions: Subscription[] = [];
 
   ngOnInit(): void {
-    this.subscribeToStore(); // must be first
+    this.subscribeToStore();
     this.subscribeForSnakeMove();
   }
 
   ngOnDestroy(): void {
     this.stop();
 
-    this.store.dispatch(gameOver());
+    this.subscriptions.forEach(sub => {
+      sub.unsubscribe();
+      console.log('unsubscribed');
+    });
   }
 
   isFood(position: Position): boolean {
@@ -72,25 +72,23 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
   }
 
   private initInterval(): Subscription {
-    this.subscription?.unsubscribe();
+    this.intervalSubscription?.unsubscribe();
 
-    this.ticker$ = interval(1000 / this.snakeSpeed).pipe(
-      map(() => 1000 / this.snakeSpeed)
-    );
+    this.ticker$ = interval(1000 / this.snakeSpeed);
 
     return this.ticker$.subscribe(() => {
-      console.log('move');
+      console.log('snake move');
       this.snake.move();
     });
   }
 
   private start(): void {
-    this.subscription?.unsubscribe();
-    this.subscription = this.initInterval();
+    this.intervalSubscription?.unsubscribe();
+    this.intervalSubscription = this.initInterval();
   }
 
   private stop(): void {
-    this.subscription?.unsubscribe();
+    this.intervalSubscription?.unsubscribe();
   }
 
   private emitGameOver(): void {
@@ -122,31 +120,37 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToStore(): void {
-    this.store.select(selectBoardSize).subscribe((boardSize: BoardSize) => {
-      this.BOARD_ROWS = boardSize.rows;
-      this.BOARD_COLUMNS = boardSize.columns;
+    this.subscriptions.push(
+      this.store.select(selectBoardSize).subscribe((boardSize: BoardSize) => {
+        this.BOARD_ROWS = boardSize.rows;
+        this.BOARD_COLUMNS = boardSize.columns;
 
-      this.snake = new Snake({ x: this.BOARD_ROWS / 2, y: this.BOARD_COLUMNS / 2 });
-      this.food = new Food(this.boardGameUtils.getRandomPosition());
-    });
+        this.snake = new Snake({ x: this.BOARD_ROWS / 2, y: this.BOARD_COLUMNS / 2 });
+        this.food = new Food(this.boardGameUtils.getRandomPosition());
+      })
+    );
 
-    this.store.select(selectDirection).subscribe((direction: Direction | null) => {
-      direction = direction || this.snake.currentDirection;
-      this.snake.currentDirection = direction;
-    });
+    this.subscriptions.push(
+      this.store.select(selectDirection).subscribe((direction: Direction | null) => {
+        direction = direction || this.snake.currentDirection;
+        this.snake.currentDirection = direction;
+      })
+    );
 
     this.isPaused$ = this.store.select(selectIsPaused);
     this.isGameOver$ = this.store.select(selectIsGameOver);
     this.snakeSpeed$ = this.store.select(selectSnakeSpeed);
 
-    combineLatest([ this.snakeSpeed$, this.isPaused$ ]).subscribe(([ speed, isPaused ]) => {
-      this.snakeSpeed = speed;
+    this.subscriptions.push(
+      combineLatest([ this.snakeSpeed$, this.isPaused$ ]).subscribe(([ speed, isPaused ]) => {
+        this.snakeSpeed = speed;
 
-      if (isPaused) {
-        this.stop();
-      } else {
-        this.start();
-      }
-    });
+        if (isPaused) {
+          this.stop();
+        } else {
+          this.start();
+        }
+      })
+    );
   }
 }

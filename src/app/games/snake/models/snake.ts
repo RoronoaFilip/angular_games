@@ -1,4 +1,4 @@
-import { Position } from './position';
+import { Position } from '../../shared/models/position';
 import { BehaviorSubject } from 'rxjs';
 import { Direction } from './direction';
 

@@ -10,4 +10,5 @@ import { TetrisBoardComponent } from '../board/tetris-board.component';
 })
 export class TetrisGameComponent {
 
+
 }

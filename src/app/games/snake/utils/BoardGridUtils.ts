@@ -1,9 +1,9 @@
-import { Position } from '../models/position';
+import { Position } from '../../shared/models/position';
 import { Direction } from '../models/direction';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectBoardSize } from '../state/selectors';
-import { BoardSize } from '../models/BoardSize';
+import { BoardSize } from '../../shared/models/BoardSize';
+import { selectBoardSize } from '../../shared/state/shared-selectors';
 
 @Injectable({
   providedIn: 'root',
