@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { selectBoardSize } from '../../../shared/state/shared-selectors';
 import { BoardSize } from '../../../shared/models/BoardSize';
 import { Position } from '../../../shared/models/position';
+import { gameOver } from '../../../shared/state/shared-actions';
 
 
 @Injectable({
@@ -33,13 +34,6 @@ export class PiecesService {
     this.store.select(selectBoardSize).subscribe(size => {
       this.boardSize = size;
     });
-  }
-
-  getRandomPiece(): Piece {
-    const pieceNames = Object.keys(PIECES);
-    const randomPieceName = pieceNames[Math.floor(Math.random() * pieceNames.length)];
-    const piece = PIECES[randomPieceName]['UP'];
-    return { ...piece };
   }
 
   isPartOfAnyPiece(position: Position): boolean {
@@ -68,6 +62,11 @@ export class PiecesService {
   }
 
   moveDown(): void {
+    if (this.isGameOver()) {
+      this.store.dispatch(gameOver());
+      return;
+    }
+
     if (this.currentPiece && this.canMoveDown(this.currentPiece)) {
       this.incrementPosition(0, 1);
     } else if (this.currentPiece) {
@@ -76,6 +75,25 @@ export class PiecesService {
       this.store.dispatch(setCurrentPiece());
       this.store.dispatch(setNextPiece({ nextPiece: this.getRandomPiece() }));
     }
+
+    const rowToRemove = this.findRowToRemove();
+    if (!rowToRemove) {
+      return;
+    }
+
+    this.passedPieces = this.passedPieces.map(piece => {
+      return {
+        ...piece,
+        coordinates: piece.coordinates
+          .filter(coord => coord.y !== rowToRemove)
+          .map(coord => {
+            return {
+              x: coord.x,
+              y: coord.y < rowToRemove ? coord.y + 1 : coord.y,
+            }
+          }),
+      };
+    });
   }
 
   moveLeft(): void {
@@ -103,6 +121,10 @@ export class PiecesService {
         return { x: position.x + this.passedCoordinates.x, y: position.y + this.passedCoordinates.y };
       }),
     };
+  }
+
+  isGameOver(): boolean {
+    return (this.currentPiece || false) && !this.canMoveDown(this.currentPiece) && this.passedCoordinates.y === 0;
   }
 
   private incrementPosition(xIncrement: number, yIncrement: number): void {
@@ -167,5 +189,21 @@ export class PiecesService {
   private isOutsideOfBoard(position: Position): boolean {
     const { x, y } = position;
     return x < 1 || x > this.boardSize.columns || y > this.boardSize.rows;
+  }
+
+  private findRowToRemove(): number | undefined {
+    const rows = Array.from({ length: this.boardSize.rows }, (_, i) => i + 1);
+    return rows.find(row => {
+      return Array.from({ length: this.boardSize.columns }, (_, i) => i + 1).every(column => {
+        return this.passedPieces.some(piece => piece.coordinates.some(coord => coord.x === column && coord.y === row));
+      });
+    });
+  }
+
+  private getRandomPiece(): Piece {
+    const pieceNames = Object.keys(PIECES);
+    const randomPieceName = pieceNames[Math.floor(Math.random() * pieceNames.length)];
+    const piece = PIECES[randomPieceName]['UP'];
+    return { ...piece };
   }
 }

@@ -1,3 +1,7 @@
 <div class="container">
   <app-tetris-board></app-tetris-board>
 </div>
+
+@if (gameOver | async) {
+  <p>Game Over!</p>
+}

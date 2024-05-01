@@ -1,11 +1,12 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { PiecesService } from '../state/pieces.service';
-import { Piece, PIECES } from '../../models/pieces/piece';
-import { interval } from 'rxjs';
+import { PIECES } from '../../models/pieces/piece';
+import { interval, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectCurrentPiece } from '../state/selectors';
 import { setCurrentPiece, setNextPiece } from '../state/actions';
+import { gameOver } from '../../../shared/state/shared-actions';
+import { selectIsGameOver } from '../../../shared/state/shared-selectors';
 
 @Component({
   selector: 'app-tetris-board',
@@ -20,7 +21,7 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
 
   store = inject(Store);
 
-  currentPiece: Piece | null = null;
+  private intervalSubscription: Subscription | null = null;
 
   piecesService = inject(PiecesService);
 
@@ -37,6 +38,7 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('destroy tetris game')
     this.piecesService.keyClickSubscription?.unsubscribe();
+    this.intervalSubscription?.unsubscribe();
   }
 
   array(start: number, end: number): number[] {
@@ -44,16 +46,23 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   }
 
   private start(): void {
-    interval(1000).pipe(
+    this.intervalSubscription = interval(1000)
+      .subscribe(() => {
+        console.log('move down')
+        this.piecesService.moveDown();
+      });
+  }
 
-    ).subscribe(() => {
-      this.piecesService.moveDown();
-    });
+  private emitGameOver(): void {
+    this.store.dispatch(gameOver());
+    this.intervalSubscription?.unsubscribe();
   }
 
   private subscribeToStore(): void {
-    this.store.select(selectCurrentPiece).subscribe(piece => {
-      this.currentPiece = piece;
+    this.store.select(selectIsGameOver).subscribe(isGameOver => {
+      if (isGameOver) {
+        this.emitGameOver();
+      }
     });
   }
 }
