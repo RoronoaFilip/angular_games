@@ -114,12 +114,16 @@ export class PiecesService {
     }
 
     const rotatedPiece = this.getRotatedPiece(this.currentPiece);
+    rotatedPiece.coordinates = rotatedPiece.coordinates.map(position => {
+      return { x: position.x + this.passedCoordinates.x, y: position.y + this.passedCoordinates.y };
+    });
+
+    if (rotatedPiece.coordinates.some(coord => this.isOutsideOfBoard(coord) || this.isPartOfPassedPieces(coord))) {
+      return;
+    }
 
     this.currentPiece = {
       ...rotatedPiece,
-      coordinates: rotatedPiece.coordinates.map(position => {
-        return { x: position.x + this.passedCoordinates.x, y: position.y + this.passedCoordinates.y };
-      }),
     };
   }
 
@@ -171,7 +175,7 @@ export class PiecesService {
 
   private getRotatedPiece(piece: Piece): Piece {
     const nextRotation = piece.nextRotation;
-    return PIECES[piece.name][nextRotation];
+    return { ...PIECES[piece.name.toUpperCase()][nextRotation] };
   }
 
   private isPartOfCurrentPiece(position: Position): boolean {

@@ -15,7 +15,7 @@ export const SQUARE: Square = {
     { x: 6, y: 2 },
   ],
   color: 'yellow',
-  name: 'Square',
+  name: 'SQUARE',
   nextRotation: 'UP',
 }
 
