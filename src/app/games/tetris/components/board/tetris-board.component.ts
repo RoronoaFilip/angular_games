@@ -1,17 +1,15 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, NgClass, NgStyle } from '@angular/common';
 import { PiecesService } from '../state/pieces.service';
-import { PIECES } from '../../models/pieces/piece';
 import { interval, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { setCurrentPiece, setNextPiece } from '../state/actions';
 import { gameOver } from '../../../shared/state/shared-actions';
 import { selectIsGameOver } from '../../../shared/state/shared-selectors';
 
 @Component({
   selector: 'app-tetris-board',
   standalone: true,
-  imports: [ NgClass, AsyncPipe ],
+  imports: [ NgClass, AsyncPipe, NgStyle ],
   templateUrl: './tetris-board.component.html',
   styleUrl: './tetris-board.component.scss',
 })
@@ -29,10 +27,6 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
     this.subscribeToStore();
     this.piecesService.subscribeToKeyClicks();
     this.start();
-
-
-    this.store.dispatch(setNextPiece({ nextPiece: PIECES['L']['UP'] }));
-    this.store.dispatch(setCurrentPiece());
   }
 
   ngOnDestroy(): void {
