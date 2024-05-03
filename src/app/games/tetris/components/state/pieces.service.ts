@@ -24,7 +24,7 @@ export class PiecesService {
   currentPiece: Piece | null = null;
   passedPieces: Piece[] = [];
 
-  passedCoordinates: { x: number, y: number } = { x: 0, y: 0 };
+  accumulatedCoordinates: { x: number, y: number } = { x: 0, y: 0 };
 
   constructor() {
     this.store.select(selectCurrentPiece).subscribe(piece => {
@@ -65,6 +65,9 @@ export class PiecesService {
         case 'ArrowRight':
           this.moveRight();
           break;
+        case ' ':
+          this.snapDown();
+          break;
       }
     });
   }
@@ -103,7 +106,7 @@ export class PiecesService {
 
     const rotatedPiece = this.getRotatedPiece(this.currentPiece);
     rotatedPiece.coordinates = rotatedPiece.coordinates.map(position => {
-      return { x: position.x + this.passedCoordinates.x, y: position.y + this.passedCoordinates.y };
+      return { x: position.x + this.accumulatedCoordinates.x, y: position.y + this.accumulatedCoordinates.y };
     });
 
     if (rotatedPiece.coordinates.some(coord => this.isOutsideOfBoard(coord) || this.isPartOfPassedPieces(coord))) {
@@ -116,7 +119,7 @@ export class PiecesService {
   }
 
   isGameOver(): boolean {
-    return (this.currentPiece || false) && !this.canMoveDown(this.currentPiece) && this.passedCoordinates.y === 0;
+    return (this.currentPiece || false) && !this.canMoveDown(this.currentPiece) && this.accumulatedCoordinates.y === 0;
   }
 
   getRandomPiece(): Piece {
@@ -138,8 +141,8 @@ export class PiecesService {
       }),
     };
 
-    this.passedCoordinates.x += xIncrement;
-    this.passedCoordinates.y += yIncrement;
+    this.accumulatedCoordinates.x += xIncrement;
+    this.accumulatedCoordinates.y += yIncrement;
 
     this.store.dispatch(moveCurrentPiece({ piece: newPiece }));
   }
@@ -224,8 +227,14 @@ export class PiecesService {
 
   private switchToNextPiece(): void {
     this.passedPieces.push(this.currentPiece!);
-    this.passedCoordinates = { x: 0, y: 0 };
+    this.accumulatedCoordinates = { x: 0, y: 0 };
     this.store.dispatch(setCurrentPiece());
     this.store.dispatch(setNextPiece({ nextPiece: this.getRandomPiece() }));
+  }
+
+  private snapDown(): void {
+    while (this.canMoveDown(this.currentPiece!)) {
+      this.moveDown();
+    }
   }
 }

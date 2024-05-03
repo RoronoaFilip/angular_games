@@ -1,18 +1,47 @@
-<div>
-  @for (row of array(1, BOARD_ROWS); track row) {
-    <div class="row">
-      @for (col of array(1, BOARD_COLUMNS); track col) {
-        <div
-          [ngClass]="{
+<div class="grids-wrapper">
+  <div class="game-board">
+    @for (row of array(1, BOARD_ROWS); track row) {
+      <div class="row">
+        @for (col of array(1, BOARD_COLUMNS); track col) {
+          <div
+            [ngClass]="{
             'cell': true
           }"
-          [ngStyle]="{
+            [ngStyle]="{
             'background-color': this.piecesService.isPartOfAnyPiece({x:col, y: row})
                 ? this.piecesService.getPieceColor({x:col, y: row})
                 : 'transparent',
           }"
-        ></div>
-      }
-    </div>
-  }
+          ></div>
+        }
+      </div>
+    }
+  </div>
+
+  <div class="next-piece-grid">
+    @for (row of array(1, 4); track row) {
+      <div class="row">
+        @for (col of array(1, 4); track col) {
+          <div
+            [ngClass]="{
+            'cell': true,
+            'next-piece-cell': this.isPartOfNextPiece({x: col, y: row})
+          }"
+            [ngStyle]="{
+            'background-color': this.isPartOfNextPiece({x: col, y: row}) ? this.nextPiece?.color : 'transparent',
+          }"
+          ></div>
+        }
+      </div>
+    }
+  </div>
+
 </div>
+
+@if (isPaused$ | async) {
+  <p class="paused-message">PAUSED</p>
+}
+
+@if (gameOver$ | async) {
+  <p class="game-over-message">GAME OVER</p>
+}

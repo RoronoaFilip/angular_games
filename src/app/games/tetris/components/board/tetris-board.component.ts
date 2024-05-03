@@ -1,10 +1,12 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AsyncPipe, NgClass, NgStyle } from '@angular/common';
 import { PiecesService } from '../state/pieces.service';
-import { interval, Subscription } from 'rxjs';
+import { interval, Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { gameOver } from '../../../shared/state/shared-actions';
-import { selectIsGameOver } from '../../../shared/state/shared-selectors';
+import { selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
+import { Piece } from '../../models/piece';
+import { selectNextPiece } from '../state/selectors';
+import { Position } from '../../../shared/models/position';
 
 @Component({
   selector: 'app-tetris-board',
@@ -23,10 +25,14 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
 
   piecesService = inject(PiecesService);
 
+  isPaused$!: Observable<boolean>;
+  gameOver$!: Observable<boolean>;
+  nextPiece: Piece | null = null;
+
   ngOnInit(): void {
     this.subscribeToStore();
     this.piecesService.subscribeToKeyClicks();
-    this.start();
+    // this.start();
   }
 
   ngOnDestroy(): void {
@@ -40,7 +46,15 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   }
 
   private start(): void {
-    this.intervalSubscription = interval(1000)
+    this.intervalSubscription = this.initInterval();
+  }
+
+  private stop(): void {
+    this.intervalSubscription?.unsubscribe();
+  }
+
+  private initInterval() {
+    return interval(1000)
       .subscribe(() => {
         console.log('move down')
         this.piecesService.moveDown();
@@ -48,15 +62,37 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   }
 
   private emitGameOver(): void {
-    this.store.dispatch(gameOver());
+    this.stop();
     this.intervalSubscription?.unsubscribe();
   }
 
   private subscribeToStore(): void {
-    this.store.select(selectIsGameOver).subscribe(isGameOver => {
+    this.gameOver$ = this.store.select(selectIsGameOver);
+    this.isPaused$ = this.store.select(selectIsPaused);
+
+    this.gameOver$.subscribe(isGameOver => {
       if (isGameOver) {
         this.emitGameOver();
       }
     });
+
+    this.isPaused$.subscribe(isPaused => {
+      if (isPaused) {
+        this.stop();
+      } else {
+        this.start();
+      }
+    });
+
+    this.store.select(selectNextPiece).subscribe(nextPiece => {
+      this.nextPiece = nextPiece;
+    });
+  }
+
+  isPartOfNextPiece(position: Position): boolean {
+    return this.nextPiece?.coordinates
+        .map(coord => ({ x: coord.x - 3, y: coord.y }))
+        .some(coord => coord.x === position.x && coord.y === position.y)
+      || false;
   }
 }
