@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Piece } from '../../models/pieces/piece';
+import { Piece } from '../../models/piece';
 
 export const moveCurrentPiece = createAction(
   '[Tetris] Move Current Piece',

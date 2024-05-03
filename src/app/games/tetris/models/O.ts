@@ -1,13 +1,13 @@
 import { Piece, PieceByDirection } from './piece';
 
 
-export type Square = Piece;
+export type O = Piece;
 
 /**
  *    * *
  *    * *
  */
-export const SQUARE: Square = {
+export const O: O = {
   coordinates: [
     { x: 5, y: 1 },
     { x: 6, y: 1 },
@@ -15,13 +15,13 @@ export const SQUARE: Square = {
     { x: 6, y: 2 },
   ],
   color: 'yellow',
-  name: 'SQUARE',
+  name: 'O',
   nextRotation: 'UP',
 }
 
-export const SQUARE_PIECES: PieceByDirection = {
-  UP: SQUARE,
-  RIGHT: SQUARE,
-  DOWN: SQUARE,
-  LEFT: SQUARE,
+export const O_PIECES: PieceByDirection = {
+  UP: O,
+  RIGHT: O,
+  DOWN: O,
+  LEFT: O,
 }

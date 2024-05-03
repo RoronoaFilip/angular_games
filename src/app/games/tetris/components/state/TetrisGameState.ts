@@ -1,4 +1,4 @@
-import { Piece } from '../../models/pieces/piece';
+import { Piece } from '../../models/piece';
 
 export type TetrisGameState = {
   currentPiece: Piece | null;

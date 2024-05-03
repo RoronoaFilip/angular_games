@@ -1,6 +1,6 @@
 import { Piece, PieceByDirection } from './piece';
 
-export type Z = Omit<Piece, 'rotate'>;
+export type Z = Piece;
 
 /**
  *     *

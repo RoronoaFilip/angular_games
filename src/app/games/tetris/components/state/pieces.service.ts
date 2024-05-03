@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Piece, PIECES } from '../../models/pieces/piece';
+import { Piece, PIECES } from '../../models/piece';
 import { Store } from '@ngrx/store';
 import { moveCurrentPiece, setCurrentPiece, setNextPiece } from './actions';
 import { selectCurrentPiece } from './selectors';
