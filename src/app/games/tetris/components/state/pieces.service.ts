@@ -26,6 +26,7 @@ export class PiecesService {
 
   accumulatedCoordinates: { x: number, y: number } = { x: 0, y: 0 };
 
+  //TODO: Move Utils to a UtilsClass (those methods that do not require the state(variables) of this service)
   constructor() {
     this.store.select(selectCurrentPiece).subscribe(piece => {
       this.currentPiece = piece;
