@@ -1,22 +1,8 @@
 <div class="container">
 
-  <div class="menu">
-    <p class="score-message">Your score: {{ score }}</p>
-    @if (isGameOver$ | async) {
-      <button class="restart-button" (click)="restart()">Restart Game</button>
-    } @else {
-      <p class="hint-message">HINT: Press Esc to Pause</p>
-      @if (isPaused$ | async) {
-        <button class="pause-button" (click)="pause()">Resume Game</button>
-      } @else {
-        <button class="pause-button" (click)="pause()">Pause Game</button>
-      }
-    }
-  </div>
+  <app-menu></app-menu>
 
-  <app-snake-board
-    (score)="onScore($event)"
-  ></app-snake-board>
+  <app-snake-board></app-snake-board>
 
   <div class="mobile-controls">
     <nav class="o-pad">

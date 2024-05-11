@@ -1,13 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import { Piece, PIECES } from '../../models/piece';
+import { Piece, PIECES } from '../models/piece';
 import { Store } from '@ngrx/store';
 import { addPassedPiece, setCurrentPiece, setNextPiece, setPassedPieces } from './actions';
 import { selectCurrentPiece, selectPassedPieces } from './selectors';
-import { KeyClickService } from '../../../shared/services/key-click.service';
+import { KeyClickService } from '../../shared/services/key-click.service';
 import { Subscription } from 'rxjs';
-import { Position } from '../../../shared/models/position';
-import { gameOver } from '../../../shared/state/shared-actions';
-import { PieceUtils } from '../../utils/PieceUtils';
+import { Position } from '../../shared/models/position';
+import { gameOver } from '../../shared/state/shared-actions';
+import { PieceUtils } from '../utils/PieceUtils';
 
 
 @Injectable({

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Snake } from '../../models/snake';
 import { Food } from '../../models/food';
 import { BoardGridUtils } from '../../utils/BoardGridUtils';
@@ -11,7 +11,7 @@ import { selectDirection, selectSnakeSpeed } from '../../state/selectors';
 import { BoardSize } from '../../../shared/models/BoardSize';
 import { Direction } from '../../models/direction';
 import { selectBoardSize, selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
-import { gameOver } from '../../../shared/state/shared-actions';
+import { gameOver, incrementScore } from '../../../shared/state/shared-actions';
 
 @Component({
   selector: 'app-snake-board',
@@ -35,8 +35,6 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
 
   BOARD_ROWS = 26;
   BOARD_COLUMNS = 26;
-
-  @Output() score = new EventEmitter<number>();
 
   snake!: Snake;
   food!: Food;
@@ -100,7 +98,7 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
     this.snake.grow();
     this.store.dispatch(increaseSnakeSpeed());
     this.food.position = this.boardGameUtils.getRandomPosition();
-    this.score.emit(1);
+    this.store.dispatch(incrementScore({ incrementValue: 1 }));
   }
 
   private subscribeForSnakeMove(): void {

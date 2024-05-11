@@ -13,6 +13,11 @@ export const selectIsGameOver = createSelector(
   (state: SharedAppState) => state.isGameOver
 );
 
+export const selectScore = createSelector(
+  selectSharedState,
+  (state: SharedAppState) => state.score
+);
+
 export const selectBoardSize = createSelector(
   selectSharedState,
   (state: SharedAppState) => state.boardSize

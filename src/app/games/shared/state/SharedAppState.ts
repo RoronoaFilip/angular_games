@@ -4,5 +4,5 @@ export type SharedAppState = {
   boardSize: BoardSize;
   isPaused: boolean;
   isGameOver: boolean;
-  lastKeyPressed: string;
+  score: number;
 }

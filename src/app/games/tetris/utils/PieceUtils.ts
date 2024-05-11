@@ -4,7 +4,7 @@ import { selectBoardSize } from '../../shared/state/shared-selectors';
 import { BoardSize } from '../../shared/models/BoardSize';
 import { Piece, PIECES } from '../models/piece';
 import { Position } from '../../shared/models/position';
-import { selectCurrentPiece, selectPassedPieces } from '../components/state/selectors';
+import { selectCurrentPiece, selectPassedPieces } from '../state/selectors';
 
 @Injectable({
   providedIn: 'root',

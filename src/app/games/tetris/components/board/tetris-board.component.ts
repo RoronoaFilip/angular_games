@@ -1,11 +1,11 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { AsyncPipe, NgClass, NgStyle } from '@angular/common';
-import { PiecesService } from '../state/pieces.service';
+import { PiecesService } from '../../state/pieces.service';
 import { interval, Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
 import { Piece } from '../../models/piece';
-import { selectNextPiece } from '../state/selectors';
+import { selectNextPiece } from '../../state/selectors';
 import { Position } from '../../../shared/models/position';
 
 @Component({

@@ -7,20 +7,18 @@ import { changeDirection } from '../../state/actions';
 import { DIRECTIONS } from '../../models/direction';
 import { NavigationService } from '../../services/navigation.service';
 import { selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
-import { pause } from '../../../shared/state/shared-actions';
+import { MenuComponent } from '../../../shared/components/menu/menu.component';
 
 @Component({
   selector: 'app-snake-game',
   standalone: true,
-  imports: [ SnakeBoardComponent, NgClass, AsyncPipe ],
+  imports: [ SnakeBoardComponent, NgClass, AsyncPipe, MenuComponent ],
   templateUrl: './snake-game.component.html',
   styleUrl: './snake-game.component.scss',
 })
 export class SnakeGameComponent implements OnInit, OnDestroy {
   navigationService = inject(NavigationService);
   store = inject(Store);
-
-  score = 0;
 
   isPaused$!: Observable<boolean>;
   isGameOver$!: Observable<boolean>;
@@ -34,18 +32,6 @@ export class SnakeGameComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('destroy snake game')
     this.navigationService.keyClickSubscription?.unsubscribe();
-  }
-
-  onScore(event: number): void {
-    this.score += event;
-  }
-
-  restart(): void {
-    location.reload();
-  }
-
-  pause(): void {
-    this.store.dispatch(pause());
   }
 
   dispatchKeyEvent(direction: string): void {

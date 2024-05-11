@@ -9,6 +9,11 @@ export const gameOver = createAction(
   '[Shared] Game Over'
 );
 
+export const incrementScore = createAction(
+  '[Shared] Set Score',
+  props<{ incrementValue: number }>()
+);
+
 export const setBoardSize = createAction(
   '[Shared] Set Board Size',
   props<{ boardSize: BoardSize }>()

@@ -3,13 +3,14 @@ import { TetrisBoardComponent } from '../board/tetris-board.component';
 import { Store } from '@ngrx/store';
 import { setBoardSize } from '../../../shared/state/shared-actions';
 import { AsyncPipe } from '@angular/common';
-import { setCurrentPiece, setNextPiece } from '../state/actions';
-import { PiecesService } from '../state/pieces.service';
+import { setNextPiece } from '../../state/actions';
+import { PiecesService } from '../../state/pieces.service';
+import { MenuComponent } from '../../../shared/components/menu/menu.component';
 
 @Component({
   selector: 'app-tetris-game',
   standalone: true,
-  imports: [ TetrisBoardComponent, AsyncPipe ],
+  imports: [ TetrisBoardComponent, AsyncPipe, MenuComponent ],
   templateUrl: './tetris-game.component.html',
   styleUrl: './tetris-game.component.scss',
 })

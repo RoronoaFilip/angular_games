@@ -10,7 +10,7 @@
             [ngStyle]="{
             'background-color': this.piecesService.isPartOfAnyPiece({x:col, y: row})
                 ? this.piecesService.getPieceColor({x:col, y: row})
-                : 'transparent',
+                : 'white',
           }"
           ></div>
         }
@@ -28,7 +28,7 @@
             'next-piece-cell': this.isPartOfNextPiece({x: col, y: row})
           }"
             [ngStyle]="{
-            'background-color': this.isPartOfNextPiece({x: col, y: row}) ? this.nextPiece?.color : 'transparent',
+            'background-color': this.isPartOfNextPiece({x: col, y: row}) ? this.nextPiece?.color : 'white',
           }"
           ></div>
         }
