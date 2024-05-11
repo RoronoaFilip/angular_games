@@ -32,7 +32,6 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscribeToStore();
     this.piecesService.subscribeToKeyClicks();
-    // this.start();
   }
 
   ngOnDestroy(): void {
@@ -43,6 +42,13 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
 
   array(start: number, end: number): number[] {
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
+
+  isPartOfNextPiece(position: Position): boolean {
+    return this.nextPiece?.coordinates
+        .map(coord => ({ x: coord.x - 3, y: coord.y }))
+        .some(coord => coord.x === position.x && coord.y === position.y)
+      || false;
   }
 
   private start(): void {
@@ -87,12 +93,5 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
     this.store.select(selectNextPiece).subscribe(nextPiece => {
       this.nextPiece = nextPiece;
     });
-  }
-
-  isPartOfNextPiece(position: Position): boolean {
-    return this.nextPiece?.coordinates
-        .map(coord => ({ x: coord.x - 3, y: coord.y }))
-        .some(coord => coord.x === position.x && coord.y === position.y)
-      || false;
   }
 }

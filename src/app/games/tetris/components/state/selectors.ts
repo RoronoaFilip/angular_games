@@ -13,3 +13,8 @@ export const selectNextPiece = createSelector(
   selectTetrisState,
   (state: TetrisGameState) => state.nextPiece
 );
+
+export const selectPassedPieces = createSelector(
+  selectTetrisState,
+  (state: TetrisGameState) => state.passedPieces
+);

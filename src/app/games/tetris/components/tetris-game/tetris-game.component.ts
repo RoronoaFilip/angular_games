@@ -26,7 +26,6 @@ export class TetrisGameComponent implements OnInit {
 
   private setStartingPiece(): void {
     this.store.dispatch(setNextPiece({ nextPiece: this.piecesService.getRandomPiece() }));
-    this.store.dispatch(setCurrentPiece());
     this.store.dispatch(setNextPiece({ nextPiece: this.piecesService.getRandomPiece() }));
   }
 }
