@@ -52,6 +52,7 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   }
 
   private start(): void {
+    this.intervalSubscription?.unsubscribe();
     this.intervalSubscription = this.initInterval();
   }
 
@@ -60,7 +61,7 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   }
 
   private initInterval() {
-    return interval(1000)
+    return interval(700)
       .subscribe(() => {
         console.log('move down')
         this.piecesService.moveDown();
