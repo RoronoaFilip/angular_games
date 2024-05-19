@@ -1,7 +1,18 @@
 @import "../../../styles";
 
+body {
+
+  height: 100vh;
+}
 
 .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+
   text-align: center;
   padding: 20px;
   background-color: white;
@@ -9,19 +20,19 @@
 }
 
 .welcome-message {
-  font-size: 2.5em;
+  font-size: 4.5em;
   color: $primary-color;
   margin: 0 0 20px 0;
 }
 
 .short-description {
-  font-size: 1.2em;
+  font-size: 2.5em;
   color: $secondary-color;
   margin: 0 0 40px 0;
 }
 
 .games-text {
-  font-size: 2em;
+  font-size: 3em;
   color: $primary-color;
   margin: 0 0 20px 0;
 }
@@ -31,22 +42,48 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   color: $primary-color;
 
   li {
-    font-size: 1.5em;
+    font-size: 2em;
     padding: 3px;
     border-radius: $border-radius;
+    font-weight: bold;
 
     a {
-      color: $link-color;
       text-decoration: none;
+      color: $primary-color;
 
-      &:hover {
-        background-color: $link-color;
-        color: white;
-      }
+    }
+
+    .redirect-link {
+      color: $primary-color;
+      line-height: 1;
+      position: relative;
+    }
+
+    .redirect-link::before {
+      content: '';
+      width: 0;
+      height: 2px;
+      border-radius: 2px;
+      background-color: $background-color;
+      position: absolute;
+      bottom: 10%;
+      transition: width .4s, left .4s;
+    }
+
+    .redirect-link:hover {
+      background-color: $link-color;
+      color: white;
+      border-radius: 4px;
+      padding: 5px 10px;
+      transition: background-color .4s, color .4s;
+    }
+
+    .redirect-link:hover::before {
+      width: 80%;
+      left: 10%;
     }
   }
 }
