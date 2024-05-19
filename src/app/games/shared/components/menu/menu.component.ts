@@ -35,6 +35,10 @@ export class MenuComponent implements OnInit {
     location.reload();
   }
 
+  backToMenu(): void {
+    location.href = '/';
+  }
+
   pause(): void {
     this.store.dispatch(pause());
   }

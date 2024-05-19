@@ -1,11 +1,14 @@
-:root {
-  --board-color: #f0f0f0;
-  --snake-grid-columns: 21;
-  --snake-grid-rows: 21;
-  --snake-color: #369e06;
-  --food-color: #f00;
-
-}
+$font-stack: 'Arial, sans-serif';
+$primary-color: #3498db;
+$secondary-color: #2ecc71;
+$text-color: #333;
+$background-color: #f9f9f9;
+$link-color: $primary-color;
+$link-hover-color: darken($primary-color, 10%);
+$border-radius: 5px;
+$food-color: #f00;
+$snake-color: #369e06;
+$board-color: #f0f0f0;
 
 body {
   max-width: 100vw;
