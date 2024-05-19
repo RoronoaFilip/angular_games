@@ -1,3 +1,5 @@
+@import "../../../../../styles";
+
 .game-over {
   filter: blur(4px);
 }
@@ -20,14 +22,14 @@
   width: 30px;
   height: 30px;
   border: 1px solid #000;
-  background-color: #f0f0f0;
+  background-color: $background-color;
 
   &.snake {
-    background-color: #369e06;
+    background-color: $snake-color;
   }
 
   &.food {
-    background-color: #f00;
+    background-color: $food-color;
   }
 }
 
