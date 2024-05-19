@@ -5,11 +5,12 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build-prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
     "lint-fix": "ng lint --fix",
-    "ci": "ng lint"
+    "deploy": "firebase deploy --only hosting"
   },
   "private": true,
   "dependencies": {
