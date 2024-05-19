@@ -1,14 +1,17 @@
 <div class="menu">
   <div class="score-message">Your score: {{ score }}</div>
-  @if (isGameOver$ | async) {
-    <button class="restart-button" (click)="restart()">Restart Game</button>
-  } @else {
-    <div class="hint-message">HINT: Press Esc to Pause</div>
-    @if (isPaused$ | async) {
-      <button class="pause-button" (click)="pause()">Resume Game</button>
+  <div class="hint-message">HINT: Press Esc to Pause</div>
+
+  <div class="buttons-wrapper">
+    <button class="restart-button" (click)="backToMenu()">Back to Menu</button>
+    @if (isGameOver$ | async) {
+      <button class="restart-button" (click)="restart()">Restart Game</button>
     } @else {
-      <button class="pause-button" (click)="pause()">Pause Game</button>
+      @if (isPaused$ | async) {
+        <button class="pause-button" (click)="pause()">Resume Game</button>
+      } @else {
+        <button class="pause-button" (click)="pause()">Pause Game</button>
+      }
     }
-  }
-  <button class="restart-button" (click)="backToMenu()">Back to Menu</button>
+  </div>
 </div>
