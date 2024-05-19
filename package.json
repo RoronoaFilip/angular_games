@@ -10,7 +10,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "lint-fix": "ng lint --fix",
-    "deploy": "firebase deploy --only hosting"
+    "deploy": "firebase deploy --only hosting",
+    "ci": "ng lint"
   },
   "private": true,
   "dependencies": {
