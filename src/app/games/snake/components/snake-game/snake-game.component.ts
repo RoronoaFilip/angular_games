@@ -8,11 +8,12 @@ import { DIRECTIONS } from '../../models/direction';
 import { NavigationService } from '../../services/navigation.service';
 import { selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
 import { MenuComponent } from '../../../shared/components/menu/menu.component';
+import { MobileControlsComponent } from '../../../shared/components/mobile-controls/mobile-controls.component';
 
 @Component({
   selector: 'app-snake-game',
   standalone: true,
-  imports: [ SnakeBoardComponent, NgClass, AsyncPipe, MenuComponent ],
+  imports: [ SnakeBoardComponent, NgClass, AsyncPipe, MenuComponent, MobileControlsComponent ],
   templateUrl: './snake-game.component.html',
   styleUrl: './snake-game.component.scss',
 })
@@ -32,13 +33,5 @@ export class SnakeGameComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     console.log('destroy snake game')
     this.navigationService.keyClickSubscription?.unsubscribe();
-  }
-
-  dispatchKeyEvent(direction: string): void {
-    const dispatchDirection = {
-      direction: DIRECTIONS[(direction).toUpperCase()] || null,
-    }
-
-    this.store.dispatch(changeDirection(dispatchDirection));
   }
 }

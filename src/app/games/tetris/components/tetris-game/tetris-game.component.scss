@@ -14,3 +14,19 @@
 
   background: #6a0000;
 }
+
+.controls {
+  display: none;
+}
+
+@media (max-width: 1050px) {
+  .controls {
+    display: block
+  }
+}
+
+@media (max-width: 680px) {
+  .pause-button {
+    font-size: 5vmin;
+  }
+}

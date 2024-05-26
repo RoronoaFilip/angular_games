@@ -19,4 +19,8 @@ export class KeyClickService {
       }
     })
   );
+
+  dispatchKeyEvent(key: string): void {
+    document.dispatchEvent(new KeyboardEvent('keydown', { key }));
+  }
 }
