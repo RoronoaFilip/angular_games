@@ -3,22 +3,22 @@ import { SharedAppState } from './SharedAppState';
 
 const selectSharedState = createFeatureSelector<SharedAppState>('shared');
 
-export const selectIsPaused = createSelector(
+export const isPaused = createSelector(
   selectSharedState,
   (state: SharedAppState) => state.isPaused
 );
 
-export const selectIsGameOver = createSelector(
+export const isGameOver = createSelector(
   selectSharedState,
   (state: SharedAppState) => state.isGameOver
 );
 
-export const selectScore = createSelector(
+export const score = createSelector(
   selectSharedState,
   (state: SharedAppState) => state.score
 );
 
-export const selectBoardSize = createSelector(
+export const boardSize = createSelector(
   selectSharedState,
   (state: SharedAppState) => state.boardSize
 );

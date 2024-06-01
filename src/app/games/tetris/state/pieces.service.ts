@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Piece, PIECES } from '../models/piece';
 import { Store } from '@ngrx/store';
 import { addPassedPiece, setCurrentPiece, setNextPiece, setPassedPieces } from './actions';
-import { selectCurrentPiece, selectPassedPieces } from './selectors';
+import { currentTetrisPiece, passedTetrisPieces } from './selectors';
 import { KeyClickService } from '../../shared/services/key-click.service';
 import { Subscription } from 'rxjs';
 import { Position } from '../../shared/models/position';
@@ -26,10 +26,10 @@ export class PiecesService {
   accumulatedCoordinates: { x: number, y: number } = { x: 0, y: 0 };
 
   constructor() {
-    this.store.select(selectCurrentPiece).subscribe(piece => {
+    this.store.select(currentTetrisPiece).subscribe(piece => {
       this.currentPiece = piece;
     });
-    this.store.select(selectPassedPieces).subscribe(pieces => {
+    this.store.select(passedTetrisPieces).subscribe(pieces => {
       this.passedPieces = pieces;
     });
   }

@@ -2,7 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectIsGameOver, selectIsPaused, selectScore } from '../../state/shared-selectors';
+import { isGameOver, isPaused, score } from '../../state/shared-selectors';
 import { pause } from '../../state/shared-actions';
 
 @Component({
@@ -23,9 +23,9 @@ export class MenuComponent implements OnInit {
   score = 0;
 
   ngOnInit(): void {
-    this.isPaused$ = this.store.select(selectIsPaused);
-    this.isGameOver$ = this.store.select(selectIsGameOver);
-    this.store.select(selectScore).subscribe(score => {
+    this.isPaused$ = this.store.select(isPaused);
+    this.isGameOver$ = this.store.select(isGameOver);
+    this.store.select(score).subscribe(score => {
       this.score = score;
     });
   }

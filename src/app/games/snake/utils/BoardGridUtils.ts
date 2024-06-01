@@ -3,7 +3,7 @@ import { Direction } from '../models/direction';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BoardSize } from '../../shared/models/BoardSize';
-import { selectBoardSize } from '../../shared/state/shared-selectors';
+import { boardSize } from '../../shared/state/shared-selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class BoardGridUtils {
   boardSize: BoardSize = { rows: 26, columns: 26 };
 
   constructor() {
-    inject(Store).select(selectBoardSize).subscribe((boardSize) => {
+    inject(Store).select(boardSize).subscribe((boardSize) => {
       this.boardSize = boardSize;
     });
   }

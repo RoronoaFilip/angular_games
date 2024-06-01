@@ -1,10 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectBoardSize } from '../../shared/state/shared-selectors';
+import { boardSize } from '../../shared/state/shared-selectors';
 import { BoardSize } from '../../shared/models/BoardSize';
 import { Piece, PIECES } from '../models/piece';
 import { Position } from '../../shared/models/position';
-import { selectCurrentPiece, selectPassedPieces } from '../state/selectors';
+import { currentTetrisPiece, passedTetrisPieces } from '../state/selectors';
 
 @Injectable({
   providedIn: 'root',
@@ -17,13 +17,13 @@ export class PieceUtils {
   passedPieces: Piece[] = [];
 
   constructor() {
-    this.store.select(selectBoardSize).subscribe((boardSize) => {
+    this.store.select(boardSize).subscribe((boardSize) => {
       this.boardSize = boardSize;
     });
-    this.store.select(selectCurrentPiece).subscribe((currentPiece) => {
+    this.store.select(currentTetrisPiece).subscribe((currentPiece) => {
       this.currentPiece = currentPiece;
     });
-    this.store.select(selectPassedPieces).subscribe((passedPieces) => {
+    this.store.select(passedTetrisPieces).subscribe((passedPieces) => {
       this.passedPieces = passedPieces;
     });
   }

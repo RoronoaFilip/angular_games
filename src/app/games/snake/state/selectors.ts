@@ -3,12 +3,12 @@ import { SnakeGameState } from './SnakeGameState';
 
 export const selectSnakeState = createFeatureSelector<SnakeGameState>('snake');
 
-export const selectDirection = createSelector(
+export const snakeDirection = createSelector(
   selectSnakeState,
   (state: SnakeGameState) => state.direction
 );
 
-export const selectSnakeSpeed = createSelector(
+export const snakeSpeed = createSelector(
   selectSnakeState,
   (state: SnakeGameState) => state.snakeSpeed
 );

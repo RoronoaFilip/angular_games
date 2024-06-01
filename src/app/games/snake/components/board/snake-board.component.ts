@@ -7,10 +7,10 @@ import { Position } from '../../../shared/models/position';
 import { combineLatest, interval, Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { increaseSnakeSpeed } from '../../state/actions';
-import { selectDirection, selectSnakeSpeed } from '../../state/selectors';
+import { snakeDirection, snakeSpeed } from '../../state/selectors';
 import { BoardSize } from '../../../shared/models/BoardSize';
 import { Direction } from '../../models/direction';
-import { selectBoardSize, selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
+import { boardSize, isGameOver, isPaused } from '../../../shared/state/shared-selectors';
 import { gameOver, incrementScore } from '../../../shared/state/shared-actions';
 
 @Component({
@@ -119,7 +119,7 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
 
   private subscribeToStore(): void {
     this.subscriptions.push(
-      this.store.select(selectBoardSize).subscribe((boardSize: BoardSize) => {
+      this.store.select(boardSize).subscribe((boardSize: BoardSize) => {
         this.BOARD_ROWS = boardSize.rows;
         this.BOARD_COLUMNS = boardSize.columns;
 
@@ -129,15 +129,15 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.push(
-      this.store.select(selectDirection).subscribe((direction: Direction | null) => {
+      this.store.select(snakeDirection).subscribe((direction: Direction | null) => {
         direction = direction || this.snake.currentDirection;
         this.snake.currentDirection = direction;
       })
     );
 
-    this.isPaused$ = this.store.select(selectIsPaused);
-    this.isGameOver$ = this.store.select(selectIsGameOver);
-    this.snakeSpeed$ = this.store.select(selectSnakeSpeed);
+    this.isPaused$ = this.store.select(isPaused);
+    this.isGameOver$ = this.store.select(isGameOver);
+    this.snakeSpeed$ = this.store.select(snakeSpeed);
 
     this.subscriptions.push(
       combineLatest([ this.snakeSpeed$, this.isPaused$ ]).subscribe(([ speed, isPaused ]) => {

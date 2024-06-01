@@ -3,10 +3,8 @@ import { SnakeBoardComponent } from '../board/snake-board.component';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { changeDirection } from '../../state/actions';
-import { DIRECTIONS } from '../../models/direction';
 import { NavigationService } from '../../services/navigation.service';
-import { selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
+import { isGameOver, isPaused } from '../../../shared/state/shared-selectors';
 import { MenuComponent } from '../../../shared/components/menu/menu.component';
 import { MobileControlsComponent } from '../../../shared/components/mobile-controls/mobile-controls.component';
 
@@ -25,8 +23,8 @@ export class SnakeGameComponent implements OnInit, OnDestroy {
   isGameOver$!: Observable<boolean>;
 
   ngOnInit(): void {
-    this.isPaused$ = this.store.select(selectIsPaused);
-    this.isGameOver$ = this.store.select(selectIsGameOver);
+    this.isPaused$ = this.store.select(isPaused);
+    this.isGameOver$ = this.store.select(isGameOver);
     this.navigationService.subscribeToKeyClicks();
   }
 

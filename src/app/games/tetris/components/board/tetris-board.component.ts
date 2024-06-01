@@ -3,9 +3,9 @@ import { AsyncPipe, NgClass, NgStyle } from '@angular/common';
 import { PiecesService } from '../../state/pieces.service';
 import { interval, Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { selectIsGameOver, selectIsPaused } from '../../../shared/state/shared-selectors';
+import { isGameOver, isPaused } from '../../../shared/state/shared-selectors';
 import { Piece } from '../../models/piece';
-import { selectNextPiece } from '../../state/selectors';
+import { nextTetrisPiece } from '../../state/selectors';
 import { Position } from '../../../shared/models/position';
 
 @Component({
@@ -74,8 +74,8 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToStore(): void {
-    this.gameOver$ = this.store.select(selectIsGameOver);
-    this.isPaused$ = this.store.select(selectIsPaused);
+    this.gameOver$ = this.store.select(isGameOver);
+    this.isPaused$ = this.store.select(isPaused);
 
     this.gameOver$.subscribe(isGameOver => {
       if (isGameOver) {
@@ -91,7 +91,7 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.store.select(selectNextPiece).subscribe(nextPiece => {
+    this.store.select(nextTetrisPiece).subscribe(nextPiece => {
       this.nextPiece = nextPiece;
     });
   }

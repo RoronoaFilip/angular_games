@@ -1,0 +1,13 @@
+.board-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 100%;
+  margin-top: 10px;
+}
+
+.row {
+  display: flex;
+}

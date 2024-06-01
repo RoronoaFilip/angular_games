@@ -1,0 +1,16 @@
+<div class="board-wrapper">
+  @for (col of array(0, this.numbersService.numbers.length - 1); track col) {
+    <div class="row">
+      @for (row of array(0, this.numbersService.numbers[0].length - 1); track row) {
+        <app-puzzle-cell
+          [num]="this.numbersService.numbers[col][row]"
+          [x]="col"
+          [y]="row"
+          appCellMove
+        >
+        </app-puzzle-cell>
+      }
+    </div>
+  }
+
+</div>
