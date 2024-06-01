@@ -6,7 +6,7 @@ import { selectCurrentPiece, selectPassedPieces } from './selectors';
 import { KeyClickService } from '../../shared/services/key-click.service';
 import { Subscription } from 'rxjs';
 import { Position } from '../../shared/models/position';
-import { gameOver } from '../../shared/state/shared-actions';
+import { gameOver, incrementScore } from '../../shared/state/shared-actions';
 import { PieceUtils } from '../utils/PieceUtils';
 
 
@@ -158,6 +158,8 @@ export class PiecesService {
     });
 
     this.store.dispatch(setPassedPieces({ pieces: newPassedPieces }));
+
+    this.store.dispatch(incrementScore({ incrementValue: this.calculateScore(rowsToRemove.length) }));
   }
 
 
@@ -171,5 +173,9 @@ export class PiecesService {
     while (this.pieceUtils.canMoveDown(this.currentPiece!)) {
       this.moveDown();
     }
+  }
+
+  private calculateScore(removedRowsCount: number): number {
+    return removedRowsCount === 1 ? 40 : removedRowsCount === 2 ? 100 : removedRowsCount === 3 ? 300 : 1200;
   }
 }
