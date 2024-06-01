@@ -139,8 +139,10 @@ body {
   }
 
   .footer-link:hover::before {
-    width: 100%;
-    left: 0;
+    background-color: $link-color;
+    width: 90%;
+    left: 5%;
+    bottom: -2px;
   }
 }
 
@@ -149,4 +151,21 @@ body {
   font-weight: bold;
   color: $primary-color;
   margin: 0 0 20px 0;
+}
+
+@media (max-width: 920px) {
+  .contacts {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 442px) {
+  .welcome-message {
+    font-size: 3.5em;
+  }
+
+  .short-description {
+    font-size: 1.5em;
+  }
 }
