@@ -1,11 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Move } from '../models/move';
+import { Store } from '@ngrx/store';
+import { incrementScore, win } from '../../shared/state/shared-actions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NumbersService {
   numbers: number[][] = [];
+
+  store = inject(Store);
 
   setNumbers(width: number, height: number): void {
     let i = 1;
@@ -23,19 +27,19 @@ export class NumbersService {
   }
 
   canMoveLeft(x: number, y: number): boolean {
-    return !this.numbers[x][y - 1];
+    return !this.numbers[x][y - 1] && y - 1 >= 0;
   }
 
   canMoveRight(x: number, y: number): boolean {
-    return !this.numbers[x][y + 1];
+    return !this.numbers[x][y + 1] && y + 1 < this.numbers[x].length;
   }
 
   canMoveUp(x: number, y: number): boolean {
-    return !this.numbers[x - 1][y];
+    return !this.numbers[x - 1][y] && x - 1 >= 0;
   }
 
   canMoveDown(x: number, y: number): boolean {
-    return !this.numbers[x + 1][y];
+    return !this.numbers[x + 1][y] && x + 1 < this.numbers.length;
   }
 
   move(x: number, y: number, move: Move) {
@@ -53,12 +57,31 @@ export class NumbersService {
         this.swap(x, y, x + 1, y);
         break;
     }
+
+    this.store.dispatch(incrementScore({ incrementValue: 1 }));
+
+    if (this.isSolved()) {
+      this.store.dispatch(win());
+    }
+  }
+
+  isSolved(): boolean {
+    let i = 1;
+    for (let x = 0; x < this.numbers.length; x++) {
+      for (let y = 0; y < this.numbers[x].length; y++) {
+        if (this.numbers[x][y] !== i && i !== this.numbers.length * this.numbers[x].length) {
+          return false;
+        }
+        i++;
+      }
+    }
+
+    return true;
   }
 
   private swap(x: number, y: number, x1: number, y1: number): void {
     [ this.numbers[x][y], this.numbers[x1][y1] ] = [ this.numbers[x1][y1], this.numbers[x][y] ];
   }
-
 
   private shuffleNumbers(): void {
     for (let i = 0; i < this.numbers.length; i++) {

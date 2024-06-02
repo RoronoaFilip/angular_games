@@ -1,3 +1,11 @@
+.puzzle-game {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
 .board-wrapper {
   display: flex;
   flex-direction: column;
@@ -6,6 +14,21 @@
 
   width: 100%;
   margin-top: 10px;
+}
+
+.game-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.locked {
+  cursor: not-allowed;
+  opacity: 30%;
 }
 
 .row {

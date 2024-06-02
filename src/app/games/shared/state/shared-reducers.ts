@@ -1,10 +1,11 @@
 import { SharedAppState } from './SharedAppState';
-import { gameOver, incrementScore, pause, setBoardSize } from './shared-actions';
+import { gameOver, incrementScore, pause, setBoardSize, win } from './shared-actions';
 import { ActionReducer, createReducer, on } from '@ngrx/store';
 
 export const initialState: SharedAppState = {
   boardSize: { rows: 20, columns: 20 },
   isPaused: false,
+  isWin: false,
   isGameOver: false,
   score: 0,
 };
@@ -18,6 +19,10 @@ export const sharedReducer: ActionReducer<SharedAppState> = createReducer(
 
   on(gameOver, (state: SharedAppState) => {
     return { ...state, isGameOver: true };
+  }),
+
+  on(win, (state: SharedAppState) => {
+    return { ...state, isWin: true };
   }),
 
   on(incrementScore, (state: SharedAppState, { incrementValue }) => {

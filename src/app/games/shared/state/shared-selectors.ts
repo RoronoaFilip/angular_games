@@ -13,6 +13,11 @@ export const isGameOver = createSelector(
   (state: SharedAppState) => state.isGameOver
 );
 
+export const isGameWon = createSelector(
+  selectSharedState,
+  (state: SharedAppState) => state.isWin
+);
+
 export const score = createSelector(
   selectSharedState,
   (state: SharedAppState) => state.score

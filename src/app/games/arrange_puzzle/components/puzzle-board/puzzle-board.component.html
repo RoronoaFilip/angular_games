@@ -1,16 +1,41 @@
-<div class="board-wrapper">
-  @for (col of array(0, this.numbersService.numbers.length - 1); track col) {
-    <div class="row">
-      @for (row of array(0, this.numbersService.numbers[0].length - 1); track row) {
-        <app-puzzle-cell
-          [num]="this.numbersService.numbers[col][row]"
-          [x]="col"
-          [y]="row"
-          appCellMove
-        >
-        </app-puzzle-cell>
+<div class="puzzle-game">
+
+  @if (!this.isWon) {
+    <div class="game-info">
+      <h1>Arrange the numbers in ascending order</h1>
+      <p>Number of moves: {{ this.moves | async }}</p>
+      <p>Time: {{ this.time }}</p>
+
+      @if (!isPlaying) {
+        <button (click)="this.start()">Start</button>
       }
     </div>
+  } @else {
+    <div class="game-over">
+      <h1>You Win</h1>
+      <p>Number of moves: {{ this.moves | async }}</p>
+      <p>Time: {{ this.time }}</p>
+      <button (click)="this.restart()">Restart</button>
+    </div>
   }
+
+  <div [ngClass]="{
+    'board-wrapper': true,
+    'locked': !this.isPlaying
+  }">
+    @for (col of array(0, this.numbersService.numbers.length - 1); track col) {
+      <div class="row">
+        @for (row of array(0, this.numbersService.numbers[0].length - 1); track row) {
+          <app-puzzle-cell
+            [num]="this.numbersService.numbers[col][row]"
+            [x]="col"
+            [y]="row"
+            appCellMove
+          >
+          </app-puzzle-cell>
+        }
+      </div>
+    }
+  </div>
 
 </div>
