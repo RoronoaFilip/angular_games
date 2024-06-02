@@ -2,20 +2,20 @@
 
   @if (!this.isWon) {
     <div class="game-info">
-      <h1>Arrange the numbers in ascending order</h1>
-      <p>Number of moves: {{ this.moves | async }}</p>
-      <p>Time: {{ this.time }}</p>
+      <h1 class="title">Arrange the numbers in ascending order</h1>
+      <div class="moves">Number of moves: {{ this.moves | async }}</div>
+      <div class="timer">Time: {{ this.time }}</div>
 
       @if (!isPlaying) {
-        <button (click)="this.start()">Start</button>
+        <button class="start-button" (click)="this.start()">Start</button>
       }
     </div>
   } @else {
     <div class="game-over">
-      <h1>You Win</h1>
-      <p>Number of moves: {{ this.moves | async }}</p>
-      <p>Time: {{ this.time }}</p>
-      <button (click)="this.restart()">Restart</button>
+      <h1 class="title">You Win</h1>
+      <div class="moves">Number of moves: {{ this.moves | async }}</div>
+      <div class="timer">Time: {{ this.time }}</div>
+      <button class="restart-button" (click)="this.restart()">Restart</button>
     </div>
   }
 

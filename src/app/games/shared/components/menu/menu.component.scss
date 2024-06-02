@@ -1,3 +1,5 @@
+@import '../../../../../styles';
+
 .menu {
   display: flex;
   flex-direction: column;
@@ -18,15 +20,7 @@
 
 .restart-button,
 .pause-button {
-  min-width: 100px;
-
-  font-size: 2vmin;
-  padding: 1vmin;
-  border-radius: 5px;
-  background: #d2a5f3;
-  color: #3e0a63;
-  border: none;
-  cursor: pointer;
+  @include button;
 }
 
 .score-message {

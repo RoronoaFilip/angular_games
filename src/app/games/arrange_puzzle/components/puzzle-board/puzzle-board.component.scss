@@ -1,9 +1,19 @@
+@import "../../../../../styles";
+
 .puzzle-game {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 
+  margin: 0;
+  width: 100%;
+  height: 100vh;
+
+  max-width: 100%;
+  min-height: 70vh;
+
+  background: #c390ed;
 }
 
 .board-wrapper {
@@ -24,13 +34,39 @@
 
   width: 100%;
   margin-bottom: 10px;
+
+  h1 {
+    text-align: center;
+  }
+}
+
+.start-button,
+.restart-button {
+  @include button;
+
+  min-width: 100px;
+  font-size: 20px;
 }
 
 .locked {
   cursor: not-allowed;
   opacity: 30%;
+  pointer-events: none;
 }
 
 .row {
   display: flex;
+}
+
+.title {
+  margin: 0.3em auto;
+  color: #8e0de4;
+  text-align: center;
+}
+
+.timer,
+.moves {
+  margin: 0.3em auto;
+  font-size: 20px;
+  color: #ffffff;
 }

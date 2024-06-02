@@ -1,4 +1,7 @@
-<div class="cell">
+<div [ngClass]="{
+  'cell': true,
+  'colored': !!num
+}">
   @if (num) {
     {{ num }}
   }

@@ -16,7 +16,6 @@ export class CellMoveDirective {
   }
 
   @HostListener('swipeleft') moveLeft(): void {
-    console.log('moveLeft');
     const x = this.appPuzzleCell.x;
     const y = this.appPuzzleCell.y;
 
@@ -26,7 +25,6 @@ export class CellMoveDirective {
   }
 
   @HostListener('swiperight') moveRight(): void {
-    console.log('moveRight');
     const x = this.appPuzzleCell.x;
     const y = this.appPuzzleCell.y;
 
@@ -36,7 +34,6 @@ export class CellMoveDirective {
   }
 
   @HostListener('swipeup') moveUp(): void {
-    console.log('moveUp');
     const x = this.appPuzzleCell.x;
     const y = this.appPuzzleCell.y;
 
@@ -46,7 +43,6 @@ export class CellMoveDirective {
   }
 
   @HostListener('swipedown') moveDown(): void {
-    console.log('moveDown');
     const x = this.appPuzzleCell.x;
     const y = this.appPuzzleCell.y;
 
