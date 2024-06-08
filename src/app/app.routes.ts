@@ -3,6 +3,7 @@ import { SnakeGameComponent } from './games/snake/components/snake-game/snake-ga
 import { TetrisGameComponent } from './games/tetris/components/tetris-game/tetris-game.component';
 import { WelcomeComponent } from './main/welcome/welcome.component';
 import { PuzzleBoardComponent } from './games/arrange_puzzle/components/puzzle-board/puzzle-board.component';
+import { BoardComponent } from './games/shoot_the_square/board/board.component';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,14 @@ export const routes: Routes = [
       {
         path: 'arrange_puzzle',
         component: PuzzleBoardComponent,
+      },
+      {
+        path: 'shoot_the_square',
+        component: BoardComponent,
+      },
+      {
+        path: '**',
+        redirectTo: '/',
       },
     ],
   },
