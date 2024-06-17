@@ -6,7 +6,9 @@ import { BehaviorSubject, interval, Observable, Subject, Subscription, takeUntil
 import { SquareService } from '../services/square.service';
 import { Store } from '@ngrx/store';
 import { AsyncPipe } from '@angular/common';
-import { score } from '../../shared/state/shared-selectors';
+import { isGameOver, score } from '../../shared/state/shared-selectors';
+import { FILL_STYLE } from '../models/fill-style';
+import { MenuComponent } from '../../shared/components/menu/menu.component';
 
 @Component({
   selector: 'app-board',
@@ -14,6 +16,7 @@ import { score } from '../../shared/state/shared-selectors';
   imports: [
     GetCoordinatesDirective,
     AsyncPipe,
+    MenuComponent,
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',
@@ -23,7 +26,8 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
   ctx!: CanvasRenderingContext2D;
 
   store = inject(Store);
-  score!: Observable<number>;
+  score$!: Observable<number>;
+  isGameOver$!: Observable<boolean>;
 
   subscriptions: Subscription[] = [];
 
@@ -77,6 +81,10 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isShot = true;
   }
 
+  restartGame() {
+    location.reload();
+  }
+
   private start(): void {
     this.ballPosition = CanvasUtils.getBallPosition(this.canvas.nativeElement);
     this.drawBall();
@@ -88,6 +96,7 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
         this.squareService.drawSquares();
       }),
       tap(() => {
+        console.log('isShot', this.isShot)
         if (this.isShot) {
           this.incrementBallPosition();
         }
@@ -112,7 +121,7 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private drawBall() {
-    CanvasUtils.drawCircle(this.ctx, this.ballPosition.x, this.ballPosition.y, 15, 'Fuchsia');
+    CanvasUtils.drawCircle(this.ctx, this.ballPosition.x, this.ballPosition.y, 15, FILL_STYLE.BALL);
     this.ballSubject.next(this.ballPosition);
   }
 
@@ -124,19 +133,33 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private onResize() {
-    this.canvas.nativeElement.width = window.innerWidth - 100;
-    this.canvas.nativeElement.height = window.innerHeight - 100;
+    this.canvas.nativeElement.width = window.innerWidth - 50;
+    this.canvas.nativeElement.height = window.innerHeight - 75;
 
     this.resetBall();
   }
 
   private subscribeToStore() {
-    this.score = this.store.select(score);
+    this.score$ = this.store.select(score);
 
-    this.score.subscribe((score) => {
+    const scoreSubscription = this.score$.subscribe((score) => {
       if (score % 50 === 0) {
         this.squareService.increaseDrawSpeed();
       }
     });
+
+    this.isGameOver$ = this.store.select(isGameOver);
+    const gameOverSubscription = this.isGameOver$.subscribe((isGameOver) => {
+      if (isGameOver) {
+        this.stopSubject.next();
+        this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+        this.ctx.font = '48px serif';
+        this.ctx.fillStyle = FILL_STYLE.BAD_SQUARE;
+        this.ctx.fillText('Game Over', this.canvas.nativeElement.width / 2 - 100, this.canvas.nativeElement.height / 2);
+      }
+    });
+
+
+    this.subscriptions.push(scoreSubscription, gameOverSubscription);
   }
 }

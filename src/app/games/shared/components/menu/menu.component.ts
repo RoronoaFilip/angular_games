@@ -1,5 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { AsyncPipe, NgClass } from '@angular/common';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { isGameOver, isPaused, score } from '../../state/shared-selectors';
@@ -10,11 +10,17 @@ import { pause } from '../../state/shared-actions';
   standalone: true,
   imports: [
     AsyncPipe,
+    NgClass,
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss',
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent implements OnInit, AfterViewInit {
+  @Input() isRow = false;
+  @Input() scoreFontSize = '7vmin';
+
+  @ViewChild('scoreElement')
+  scoreElement!: ElementRef;
 
   store = inject(Store);
   isPaused$!: Observable<boolean>;
@@ -30,6 +36,9 @@ export class MenuComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.scoreElement.nativeElement.style.fontSize = this.scoreFontSize;
+  }
 
   restart(): void {
     location.reload();

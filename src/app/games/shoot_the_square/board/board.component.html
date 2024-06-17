@@ -1,12 +1,11 @@
 <div class="canvas-wrapper">
+
+  <app-menu style="width: 100%" [isRow]="true" [scoreFontSize]="'4vmin'"></app-menu>
+
   <canvas
     #canvas
     class="canvas"
     width="1780" height="1000"
     (click)="moveBall($event)"
   ></canvas>
-
-  <div class="score">
-    <span>Score: {{ score | async }}</span>
-  </div>
 </div>

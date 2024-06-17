@@ -3,8 +3,9 @@ import { BehaviorSubject, interval, Subject, Subscription } from 'rxjs';
 import { Position } from '../../shared/models/position';
 import { CanvasUtils } from '../utils/CanvasUtils';
 import { Store } from '@ngrx/store';
-import { incrementScore } from '../../shared/state/shared-actions';
-
+import { gameOver, incrementScore } from '../../shared/state/shared-actions';
+import { Square } from '../models/square';
+import { FILL_STYLE } from '../models/fill-style';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class SquareService {
   store = inject(Store);
 
   ballPosition: Position = { x: 0, y: 0 };
-  squares: Position[] = [];
+  squares: Square[] = [];
   squaresDrawSpeed = 1500;
   squaresFallSpeed = 1;
 
@@ -42,10 +43,14 @@ export class SquareService {
         const isCollision = CanvasUtils.isCollision(this.ballPosition, square);
 
         if (isCollision) {
-          ballResetSubject.next();
-          CanvasUtils.clearRect(this.ctx, square.x - 2, square.y - 2);
+          if (square.fillStyle === FILL_STYLE.BAD_SQUARE) {
+            this.store.dispatch(gameOver());
+          } else if (square.fillStyle === FILL_STYLE.SQUARE) {
+            ballResetSubject.next();
+            CanvasUtils.clearRect(this.ctx, square.x - 2, square.y - 2);
 
-          this.store.dispatch(incrementScore({ incrementValue: 10 }))
+            this.store.dispatch(incrementScore({ incrementValue: 10 }))
+          }
         }
 
         return !isCollision;
@@ -62,14 +67,17 @@ export class SquareService {
       return square;
     });
 
-    this.squares = this.squares.filter((square) => !CanvasUtils.isOutsideCanvas(this.canvas, square.x, square.y));
-    console.log(`Squares: ${this.squares.length}`)
+    if (this.areAnySquaresOutsideCanvas()) {
+      this.store.dispatch(gameOver());
+    } else {
+      this.squares = this.squares.filter((square) => !CanvasUtils.isOutsideCanvas(this.canvas, square.x, square.y));
+    }
   }
 
   drawSquares() {
     this.squares.forEach((square) => {
       CanvasUtils.clearRect(this.ctx, square.x - 2, square.y - 2);
-      CanvasUtils.drawSquare(this.ctx, square.x, square.y);
+      CanvasUtils.drawSquare(this.ctx, square);
     });
   }
 
@@ -79,12 +87,12 @@ export class SquareService {
   }
 
   increaseDrawSpeed() {
-    this.squaresDrawSpeed = Math.max(100, this.squaresDrawSpeed - 50);
+    this.squaresDrawSpeed = Math.max(500, this.squaresDrawSpeed - 50);
     this.initSquaresDrawInterval();
   }
 
   private addSquare() {
-    const squarePosition = CanvasUtils.getSquarePosition(this.canvas);
+    const squarePosition = CanvasUtils.generateSquare(this.canvas);
     this.squares.push(squarePosition);
   }
 
@@ -95,5 +103,10 @@ export class SquareService {
       .subscribe(() => {
         this.addSquare();
       });
+  }
+
+  private areAnySquaresOutsideCanvas(): boolean {
+    return this.squares.some((square) =>
+      square.fillStyle === FILL_STYLE.SQUARE && CanvasUtils.isOutsideCanvas(this.canvas, square.x, square.y));
   }
 }

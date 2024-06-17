@@ -1,6 +1,8 @@
-<div class="menu">
-  <div class="score-message">Your score: {{ score }}</div>
-  <div class="hint-message">HINT: Press Esc to Pause</div>
+<div [ngClass]="{
+  'menu': true,
+  'flex-row': isRow,
+}">
+  <div class="score-message" #scoreElement>Your score: {{ score }}</div>
 
   <div class="buttons-wrapper">
     <button class="restart-button" (click)="backToMenu()">Back to Menu</button>

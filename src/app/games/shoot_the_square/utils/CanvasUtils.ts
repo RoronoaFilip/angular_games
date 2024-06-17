@@ -1,4 +1,6 @@
 import { Position } from '../../shared/models/position';
+import { Square } from '../models/square';
+import { FILL_STYLE } from '../models/fill-style';
 
 export class CanvasUtils {
   static drawCircle(context: CanvasRenderingContext2D, x: number, y: number, radius: number, color: string) {
@@ -9,10 +11,12 @@ export class CanvasUtils {
     context.stroke();
   }
 
-  static drawSquare(context: CanvasRenderingContext2D, x: number, y: number) {
+  static drawSquare(context: CanvasRenderingContext2D, square: Square) {
+    const { x, y } = square;
+
     context.beginPath();
     context.rect(x, y, 25, 25);
-    context.fillStyle = 'green';
+    context.fillStyle = square.fillStyle;
     context.fill();
     context.stroke();
   }
@@ -43,10 +47,10 @@ export class CanvasUtils {
     return { x, y };
   }
 
-  static getSquarePosition(canvas: HTMLCanvasElement): Position {
+  static generateSquare(canvas: HTMLCanvasElement): Square {
     const x = Math.floor(Math.random() * canvas.width);
 
-    return { x, y: 0 };
+    return { x, y: 0, fillStyle: Math.random() < 0.2 ? FILL_STYLE.BAD_SQUARE : FILL_STYLE.SQUARE };
   }
 
   static calculateSpeed(ballPosition: Position, pointPosition: Position): { x: number, y: number } {
