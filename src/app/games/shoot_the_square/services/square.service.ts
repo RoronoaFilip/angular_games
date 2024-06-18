@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, interval, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, interval, Subject, Subscription, takeUntil } from 'rxjs';
 import { Position } from '../../shared/models/position';
 import { CanvasUtils } from '../utils/CanvasUtils';
 import { Store } from '@ngrx/store';
@@ -23,6 +23,8 @@ export class SquareService {
 
   canvas!: HTMLCanvasElement;
   ctx!: CanvasRenderingContext2D;
+
+  pauseSubject = new Subject<void>();
 
   setCurrentCanvas(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     this.canvas = canvas;
@@ -61,6 +63,11 @@ export class SquareService {
     return ballResetSubject;
   }
 
+  unsubscribe() {
+    this.ballPositionSubscription?.unsubscribe();
+    this.squareIntervalSubscription?.unsubscribe();
+  }
+
   moveSquares() {
     this.squares = this.squares.map((square) => {
       square.y += this.squaresFallSpeed;
@@ -81,14 +88,17 @@ export class SquareService {
     });
   }
 
-  unsubscribe() {
-    this.ballPositionSubscription?.unsubscribe();
-    this.squareIntervalSubscription?.unsubscribe();
-  }
-
   increaseDrawSpeed() {
     this.squaresDrawSpeed = Math.max(500, this.squaresDrawSpeed - 50);
     this.initSquaresDrawInterval();
+  }
+
+  pause(isPaused: boolean) {
+    if (isPaused) {
+      this.pauseSubject.next();
+    } else {
+      this.initSquaresDrawInterval();
+    }
   }
 
   private addSquare() {
@@ -99,10 +109,14 @@ export class SquareService {
   private initSquaresDrawInterval() {
     this.squareIntervalSubscription?.unsubscribe();
 
-    this.squareIntervalSubscription = interval(this.squaresDrawSpeed)
-      .subscribe(() => {
-        this.addSquare();
-      });
+    this.squareIntervalSubscription =
+      interval(this.squaresDrawSpeed)
+        .pipe(
+          takeUntil(this.pauseSubject)
+        )
+        .subscribe(() => {
+          this.addSquare();
+        });
   }
 
   private areAnySquaresOutsideCanvas(): boolean {

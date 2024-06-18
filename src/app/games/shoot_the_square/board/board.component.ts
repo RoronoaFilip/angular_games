@@ -6,9 +6,10 @@ import { BehaviorSubject, interval, Observable, Subject, Subscription, takeUntil
 import { SquareService } from '../services/square.service';
 import { Store } from '@ngrx/store';
 import { AsyncPipe } from '@angular/common';
-import { isGameOver, score } from '../../shared/state/shared-selectors';
+import { isGameOver, isPaused, score } from '../../shared/state/shared-selectors';
 import { FILL_STYLE } from '../models/fill-style';
 import { MenuComponent } from '../../shared/components/menu/menu.component';
+import { KeyClickService } from '../../shared/services/key-click.service';
 
 @Component({
   selector: 'app-board',
@@ -29,8 +30,10 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
   score$!: Observable<number>;
   isGameOver$!: Observable<boolean>;
 
+  intervalSubscription!: Subscription;
   subscriptions: Subscription[] = [];
 
+  keyClickService = inject(KeyClickService);
   squareService = inject(SquareService);
 
   private ballPosition!: Position;
@@ -41,8 +44,6 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
   private isShot = false;
 
   ngOnInit() {
-    this.subscribeToStore();
-
     this.ctx = this.canvas.nativeElement.getContext('2d');
     window.addEventListener('resize', this.onResize.bind(this));
 
@@ -50,9 +51,9 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
     const subscription = this.squareService.subscribeToBall(this.ballSubject).subscribe(() => {
       this.resetBall();
     });
-    this.subscriptions.push(subscription);
 
-    this.start();
+    this.subscriptions.push(subscription, this.keyClickService.keyPress$.subscribe());
+    this.subscribeToStore();
   }
 
   ngAfterViewInit() {
@@ -64,6 +65,7 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.stopSubject.complete();
     window.removeEventListener('resize', this.onResize.bind(this));
     this.squareService.unsubscribe();
+    this.intervalSubscription.unsubscribe();
     this.subscriptions.forEach((subscription) => subscription?.unsubscribe());
   }
 
@@ -81,22 +83,18 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isShot = true;
   }
 
-  restartGame() {
-    location.reload();
-  }
-
   private start(): void {
     this.ballPosition = CanvasUtils.getBallPosition(this.canvas.nativeElement);
     this.drawBall();
 
-    interval(10).pipe(
+    this.intervalSubscription = interval(10).pipe(
       takeUntil(this.stopSubject),
       tap(() => {
         this.squareService.moveSquares();
         this.squareService.drawSquares();
       }),
       tap(() => {
-        console.log('isShot', this.isShot)
+
         if (this.isShot) {
           this.incrementBallPosition();
         }
@@ -159,7 +157,15 @@ export class BoardComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
+    const pauseSubscription = this.store.select(isPaused).subscribe((isPaused) => {
+      if (isPaused) {
+        this.stopSubject.next();
+      } else {
+        this.start();
+      }
+      this.squareService.pause(isPaused);
+    });
 
-    this.subscriptions.push(scoreSubscription, gameOverSubscription);
+    this.subscriptions.push(scoreSubscription, gameOverSubscription, pauseSubscription);
   }
 }
