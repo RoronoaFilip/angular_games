@@ -35,7 +35,6 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('destroy tetris game')
     this.piecesService.keyClickSubscription?.unsubscribe();
     this.intervalSubscription?.unsubscribe();
   }
@@ -63,7 +62,6 @@ export class TetrisBoardComponent implements OnInit, OnDestroy {
   private initInterval() {
     return interval(700)
       .subscribe(() => {
-        console.log('move down')
         this.piecesService.moveDown();
       });
   }

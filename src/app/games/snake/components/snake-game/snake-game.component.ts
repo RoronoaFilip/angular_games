@@ -29,7 +29,6 @@ export class SnakeGameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('destroy snake game')
     this.navigationService.keyClickSubscription?.unsubscribe();
   }
 }

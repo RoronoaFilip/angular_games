@@ -53,7 +53,6 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
 
     this.subscriptions.forEach(sub => {
       sub.unsubscribe();
-      console.log('unsubscribed');
     });
   }
 
@@ -75,7 +74,7 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
     this.ticker$ = interval(1000 / this.snakeSpeed);
 
     return this.ticker$.subscribe(() => {
-      console.log('snake move');
+
       this.snake.move();
     });
   }

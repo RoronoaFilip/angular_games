@@ -19,7 +19,6 @@ export class NavigationService {
     this.unsubscribeFromKeyClicks();
 
     this.keyClickSubscription = this.keyClickService.keyPress$.subscribe(key => {
-      console.log('snake key', key)
       switch (key) {
         case 'ArrowUp':
           this.store.dispatch(changeDirection({ direction: DIRECTIONS['UP'] }));

@@ -49,7 +49,6 @@ export class PiecesService {
 
   subscribeToKeyClicks(): void {
     this.keyClickSubscription = this.keyClickService.keyPress$.subscribe(key => {
-      console.log('tetris key', key)
       switch (key) {
         case 'ArrowUp':
           this.rotate();
@@ -113,7 +112,7 @@ export class PiecesService {
     }
 
     this.store.dispatch(setCurrentPiece({ piece: rotatedPiece }));
-    console.log('rotate');
+
   }
 
   isGameOver(): boolean {
