@@ -14,8 +14,12 @@ export const win = createAction(
 );
 
 export const incrementScore = createAction(
-  '[Shared] Set Score',
+  '[Shared] Increment Score',
   props<{ incrementValue: number }>()
+);
+
+export const resetScore = createAction(
+  '[Shared] Reset Score'
 );
 
 export const setBoardSize = createAction(

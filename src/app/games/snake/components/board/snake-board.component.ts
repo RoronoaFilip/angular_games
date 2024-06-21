@@ -11,7 +11,7 @@ import { snakeDirection, snakeSpeed } from '../../state/selectors';
 import { BoardSize } from '../../../shared/models/BoardSize';
 import { Direction } from '../../models/direction';
 import { boardSize, isGameOver, isPaused } from '../../../shared/state/shared-selectors';
-import { gameOver, incrementScore } from '../../../shared/state/shared-actions';
+import { gameOver, incrementScore, resetScore } from '../../../shared/state/shared-actions';
 
 @Component({
   selector: 'app-snake-board',
@@ -37,6 +37,7 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
   BOARD_COLUMNS = 26;
 
   snake!: Snake;
+  snakeMoveSubscription!: Subscription;
   food!: Food;
 
   ticker$: Observable<number> | null = null;
@@ -45,7 +46,6 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscribeToStore();
-    this.subscribeForSnakeMove();
   }
 
   ngOnDestroy(): void {
@@ -74,18 +74,18 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
     this.ticker$ = interval(1000 / this.snakeSpeed);
 
     return this.ticker$.subscribe(() => {
-
       this.snake.move();
     });
   }
 
   private start(): void {
-    this.intervalSubscription?.unsubscribe();
     this.intervalSubscription = this.initInterval();
+    this.subscribeForSnakeMove();
   }
 
   private stop(): void {
     this.intervalSubscription?.unsubscribe();
+    this.snakeMoveSubscription?.unsubscribe();
   }
 
   private emitGameOver(): void {
@@ -101,7 +101,8 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
   }
 
   private subscribeForSnakeMove(): void {
-    this.snake.head$$.subscribe(head => {
+    this.snakeMoveSubscription?.unsubscribe();
+    this.snakeMoveSubscription = this.snake.head$$.subscribe(head => {
       if (!head) return;
 
       if (this.boardGameUtils.isPositionOutOfBounds(head)
@@ -119,11 +120,7 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
   private subscribeToStore(): void {
     this.subscriptions.push(
       this.store.select(boardSize).subscribe((boardSize: BoardSize) => {
-        this.BOARD_ROWS = boardSize.rows;
-        this.BOARD_COLUMNS = boardSize.columns;
-
-        this.snake = new Snake({ x: this.BOARD_ROWS / 2, y: this.BOARD_COLUMNS / 2 });
-        this.food = new Food(this.boardGameUtils.getRandomPosition());
+        this.resetSnakeGame(boardSize);
       })
     );
 
@@ -149,5 +146,18 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
         }
       })
     );
+  }
+
+  private resetSnakeGame(boardSize: BoardSize): void {
+    this.BOARD_ROWS = boardSize.rows;
+    this.BOARD_COLUMNS = boardSize.columns;
+    this.store.dispatch(resetScore());
+
+    this.snake = new Snake(this.boardGameUtils.getInitialSnakePosition());
+    this.food = new Food(this.boardGameUtils.getRandomPosition());
+
+    this.snakeSpeed = 1;
+
+    this.start();
   }
 }

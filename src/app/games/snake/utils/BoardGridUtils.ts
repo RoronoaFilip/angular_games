@@ -22,13 +22,20 @@ export class BoardGridUtils {
     return position1.x === position2.x && position1.y === position2.y;
   }
 
+  getInitialSnakePosition(): Position {
+    return {
+      x: Math.floor(this.boardSize.columns / 2),
+      y: Math.floor(this.boardSize.rows / 2),
+    };
+  }
+
   getRandomPosition(): Position {
     const width = this.boardSize.columns;
     const height = this.boardSize.rows;
 
     return {
-      x: Math.abs(Math.floor(Math.random() * width) + 1),
-      y: Math.abs(Math.floor(Math.random() * height) + 1),
+      x: Math.floor(Math.random() * (width - 1) + 1),
+      y: Math.floor(Math.random() * (height - 1) + 1),
     };
   }
 

@@ -16,6 +16,7 @@ export class Snake {
 
   grow(): void {
     this.snakeBody.push({ ...this.snakeBody[this.snakeBody.length - 1] });
+    this.move();
   }
 
   move(): void {

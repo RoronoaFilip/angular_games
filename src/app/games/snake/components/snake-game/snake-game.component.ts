@@ -7,11 +7,12 @@ import { NavigationService } from '../../services/navigation.service';
 import { isGameOver, isPaused } from '../../../shared/state/shared-selectors';
 import { MenuComponent } from '../../../shared/components/menu/menu.component';
 import { MobileControlsComponent } from '../../../shared/components/mobile-controls/mobile-controls.component';
+import { SnakeSettingsComponent } from '../snake-settings/snake-settings.component';
 
 @Component({
   selector: 'app-snake-game',
   standalone: true,
-  imports: [ SnakeBoardComponent, NgClass, AsyncPipe, MenuComponent, MobileControlsComponent ],
+  imports: [ SnakeBoardComponent, NgClass, AsyncPipe, MenuComponent, MobileControlsComponent, SnakeSettingsComponent ],
   templateUrl: './snake-game.component.html',
   styleUrl: './snake-game.component.scss',
 })

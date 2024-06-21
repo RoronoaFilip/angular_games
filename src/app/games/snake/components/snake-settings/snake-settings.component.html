@@ -1,0 +1,15 @@
+<div class="settings-container">
+  <i class="fas fa-cog fa-2x gear-icon" (click)="showSettings = !showSettings"></i>
+  @if (showSettings) {
+    <ng-form [formGroup]="form" class="settings">
+      <div class="input-wrapper">
+        <label for="rows">Rows</label>
+        <input class="form-input" type="number" id="rows" formControlName="rows"/>
+      </div>
+      <div class="input-wrapper">
+        <label for="columns">Columns</label>
+        <input class="form-input" type="number" id="columns" formControlName="columns"/>
+      </div>
+    </ng-form>
+  }
+</div>
