@@ -4,6 +4,7 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { BoardSize } from '../../shared/models/BoardSize';
 import { boardSize } from '../../shared/state/shared-selectors';
+import { Wall } from '../models/wall';
 
 @Injectable({
   providedIn: 'root',
@@ -48,6 +49,15 @@ export class BoardGridUtils {
     return snakeBody.some(segment => {
       return position !== segment && this.equal(position, segment);
     });
+  }
+
+  generateWalls(): Wall[] {
+    const walls: Wall[] = [];
+    for (let i = 0; i < 5; i++) {
+      const wall = new Wall(this.getRandomPosition());
+      walls.push(wall);
+    }
+    return walls;
   }
 
   isDirectionOpposite(direction1: Direction, direction2: Direction): boolean {

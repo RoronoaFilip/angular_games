@@ -8,6 +8,7 @@ $link-hover-color: darken($primary-color, 10%);
 $border-radius: 5px;
 $food-color: #f00;
 $snake-color: #369e06;
+$wall-color: #3e0a63;
 $board-color: #f0f0f0;
 
 body {
@@ -19,16 +20,21 @@ body {
 }
 
 .snake {
-  background-color: var(--snake-color);
+  background-color: $snake-color;
   border: 0.25vmin solid black;
   transition: all .3ms ease-in;
 }
 
 .food {
   border-radius: 50%;
-  background-color: var(--food-color);
+  background-color: $food-color;
   border: 0.25vmin solid black;
   transition: all .3ms ease-in;
+}
+
+.wall {
+  background-color: $wall-color;
+  border: 0.25vmin solid black;
 }
 
 @mixin button {

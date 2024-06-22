@@ -5,6 +5,7 @@
       'cell': true,
       'snake': isSnake({x: col, y: row}),
       'food': isFood({x: col, y: row}),
+      'wall': isWall({x: col, y: row}),
       'game-over': isGameOver$ | async,
       }"></div>
     }

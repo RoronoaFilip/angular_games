@@ -12,6 +12,7 @@ import { BoardSize } from '../../../shared/models/BoardSize';
 import { Direction } from '../../models/direction';
 import { boardSize, isGameOver, isPaused } from '../../../shared/state/shared-selectors';
 import { gameOver, incrementScore, resetScore } from '../../../shared/state/shared-actions';
+import { Wall } from '../../models/wall';
 
 @Component({
   selector: 'app-snake-board',
@@ -39,6 +40,7 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
   snake!: Snake;
   snakeMoveSubscription!: Subscription;
   food!: Food;
+  walls!: Wall[];
 
   ticker$: Observable<number> | null = null;
   private intervalSubscription: Subscription | null = null;
@@ -60,12 +62,16 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
     return this.boardGameUtils.equal(position, this.food.position);
   }
 
-  array(start: number, end: number): number[] {
-    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  }
-
   isSnake(position: Position): boolean {
     return this.boardGameUtils.isSnakeCollision(position, this.snake.snakeBody);
+  }
+
+  isWall(position: Position): boolean {
+    return this.walls.some(wall => this.boardGameUtils.equal(position, wall.position));
+  }
+
+  array(start: number, end: number): number[] {
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   }
 
   private initInterval(): Subscription {
@@ -113,6 +119,9 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
 
       if (this.boardGameUtils.equal(head, this.food.position)) {
         this.eatFood();
+        this.walls = this.boardGameUtils.generateWalls();
+      } else if (this.isWall(head)) {
+        this.emitGameOver();
       }
     });
   }
@@ -155,6 +164,7 @@ export class SnakeBoardComponent implements OnInit, OnDestroy {
 
     this.snake = new Snake(this.boardGameUtils.getInitialSnakePosition());
     this.food = new Food(this.boardGameUtils.getRandomPosition());
+    this.walls = this.boardGameUtils.generateWalls();
 
     this.snakeSpeed = 1;
 
